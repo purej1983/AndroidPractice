@@ -30,7 +30,7 @@ object ScopeFunctionsPractice {
      * Requirement: use `run`.
      */
     fun displayName(user: User): String {
-        TODO("Exercise 2 — use run")
+        return user.run { "$name <$email>" }
     }
 
     /**
