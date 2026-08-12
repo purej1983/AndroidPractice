@@ -67,6 +67,9 @@ object ScopeFunctionsPractice {
         value: Int,
         logger: (String) -> Unit
     ): MutableList<Int> {
-        TODO("Exercise 4 — use also")
+        return numbers.also {
+            it.add(value)
+            logger("Added: $value")
+        }
     }
 }
