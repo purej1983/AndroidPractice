@@ -46,7 +46,11 @@ object ScopeFunctionsPractice {
      * Requirement: use `apply`.
      */
     fun activate(user: User): User {
-        TODO("Exercise 3 — use apply")
+        return user.apply {
+            name = name.trim()
+            email = email.lowercase()
+            active = true
+        }
     }
 
     /**
