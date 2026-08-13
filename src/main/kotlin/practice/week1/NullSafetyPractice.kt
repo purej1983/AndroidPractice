@@ -74,7 +74,8 @@ object NullSafetyPractice {
      * Requirement: use `checkNotNull`. Do not use `!!`.
      */
     fun checkToken(token: String?): String {
-        TODO()
+        val state = checkNotNull(token) { throw IllegalStateException() }
+        return state
     }
 
     /**
