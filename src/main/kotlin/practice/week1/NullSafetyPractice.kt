@@ -49,7 +49,7 @@ object NullSafetyPractice {
      * Requirement: use `?:`. Do not use `!!`.
      */
     fun displayName(nickname: String?, name: String?): String {
-        TODO()
+        return nickname ?: name ?: "Anonymous" 
     }
 
     /**
