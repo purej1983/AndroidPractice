@@ -61,8 +61,7 @@ object NullSafetyPractice {
      * Requirement: use `requireNotNull`. Do not use `!!`.
      */
     fun requireId(id: String?): String {
-        requireNotNull(id) { throw IllegalArgumentException() }
-        return id
+        return requireNotNull(id) { "id is required" }        
     }
 
     /**
@@ -74,8 +73,7 @@ object NullSafetyPractice {
      * Requirement: use `checkNotNull`. Do not use `!!`.
      */
     fun checkToken(token: String?): String {
-        val state = checkNotNull(token) { throw IllegalStateException() }
-        return state
+        return checkNotNull(token) { "active session token is missing" }
     }
 
     /**
