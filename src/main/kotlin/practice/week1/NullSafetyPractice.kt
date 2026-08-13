@@ -36,7 +36,7 @@ object NullSafetyPractice {
      * Requirement: use `?.`. Do not use `!!`.
      */
     fun lowercaseEmail(email: String?): String? {
-        TODO()
+        return email?.lowercase()
     }
 
     /**
