@@ -61,7 +61,8 @@ object NullSafetyPractice {
      * Requirement: use `requireNotNull`. Do not use `!!`.
      */
     fun requireId(id: String?): String {
-        TODO()
+        requireNotNull(id) { throw IllegalArgumentException() }
+        return id
     }
 
     /**
