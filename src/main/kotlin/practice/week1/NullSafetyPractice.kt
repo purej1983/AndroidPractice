@@ -90,6 +90,15 @@ object NullSafetyPractice {
      * Requirement: do not use `!!`.
      */
     fun toUserProfile(dto: UserDto): UserProfile {
-        TODO()
+        val id = requireNotNull(dto.id) { "id is required"}
+        val name = requireNotNull(dto.name) { "name is required"}
+        return UserProfile(
+            id = id,
+            name = name,
+            email = dto.email?.lowercase(),
+            age = dto.age ?: 0,
+            nickname = dto.nickname ?: name,
+            bio = dto.bio
+        )
     }
 }
