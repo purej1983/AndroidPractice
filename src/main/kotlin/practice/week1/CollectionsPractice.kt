@@ -37,7 +37,7 @@ object CollectionsPractice {
      * Requirement: use `filter`.
      */
     fun activeOrders(orders: List<Order>): List<Order> {
-        TODO()
+        return orders.filter{ it.status !== OrderStatus.CANCELLED }
     }
 
     /**
