@@ -116,7 +116,7 @@ object CollectionsPractice {
      * Requirement: use `any`.
      */
     fun hasCancelled(orders: List<Order>): Boolean {
-        TODO()
+        return orders.any{ it.status === OrderStatus.CANCELLED }
     }
 
     /**
