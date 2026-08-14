@@ -105,7 +105,7 @@ object CollectionsPractice {
      * Requirement: use `fold`. Do not use `sum` or `sumOf`.
      */
     fun totalAmount(orders: List<Order>): Int {
-        TODO()
+        return orders.fold(0) { it.quantity * it.unitPrice }
     }
 
     /**
