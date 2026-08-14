@@ -128,7 +128,10 @@ object CollectionsPractice {
      * Requirement: use `all`.
      */
     fun allFulfilled(orders: List<Order>): Boolean {
-        TODO()
+        return orders.all{ it.status in 
+        setOf(
+            OrderStatus.PAID,
+            OrderStatus.SHIPPED)}
     }
 
     /**
