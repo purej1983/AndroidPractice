@@ -37,7 +37,7 @@ object CollectionsPractice {
      * Requirement: use `filter`.
      */
     fun activeOrders(orders: List<Order>): List<Order> {
-        return orders.filter{ it.status !== OrderStatus.CANCELLED }
+        return orders.filter{ it.status != OrderStatus.CANCELLED }
     }
 
     /**
@@ -116,7 +116,7 @@ object CollectionsPractice {
      * Requirement: use `any`.
      */
     fun hasCancelled(orders: List<Order>): Boolean {
-        return orders.any{ it.status === OrderStatus.CANCELLED }
+        return orders.any{ it.status == OrderStatus.CANCELLED }
     }
 
     /**
