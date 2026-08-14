@@ -158,7 +158,7 @@ object CollectionsPractice {
                 orderCount = entry.value.size,
                 totalAmount = entry.value.flatMap{ it.items }.fold(0) {total, item -> total + item.quantity * item.unitPrice}
             )
-        }
+        }.sortedBy{ it.customerId }
     }
 
     /**
