@@ -70,7 +70,7 @@ object CollectionsPractice {
      * Requirement: use `flatMap`. Do not use nested loops.
      */
     fun itemNames(orders: List<Order>): List<String> {
-        TODO()
+        return orders.flatMap{ it.items }.map{ it.name }
     }
 
     /**
