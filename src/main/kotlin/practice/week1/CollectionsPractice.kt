@@ -82,7 +82,7 @@ object CollectionsPractice {
      * Requirement: use `associate`.
      */
     fun ordersById(orders: List<Order>): Map<String, Order> {
-        TODO()
+        return orders.associate{ it.id to it }
     }
 
     /**
