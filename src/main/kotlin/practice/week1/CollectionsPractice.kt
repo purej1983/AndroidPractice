@@ -105,7 +105,7 @@ object CollectionsPractice {
      * Requirement: use `fold`. Do not use `sum` or `sumOf`.
      */
     fun totalAmount(orders: List<Order>): Int {
-        return orders.fold(0) { it.quantity * it.unitPrice }
+        return orders.flatMap{ it.items }.fold(0) {total, item -> total + item.quantity * item.unitPrice }
     }
 
     /**
@@ -156,7 +156,7 @@ object CollectionsPractice {
             CustomerSummary(
                 customerId = entry.key,
                 orderCount = entry.value.size,
-                totalAmount = entry.value.fold(0) {it.quantity * it.unitPrice}
+                totalAmount = entry.value.flatMap{ it.items }.fold(0) {total, item -> total + item.quantity * item.unitPrice}
             )
         }
     }
@@ -173,6 +173,11 @@ object CollectionsPractice {
      * Requirement: use Sequence operations. Do not call `toList()`.
      */
     fun firstPaidAmount(orders: Sequence<Order>): Int? {
-        return orders.first{ it.status === OrderStatus.PAID }.map{ it.unitPrice * it.quantity }
+        return orders.firstOrNull { it.status == OrderStatus.PAID }
+        ?.let { order ->
+            order.items.sumOf { item ->
+                item.unitPrice * item.quantity
+            }
+        }
     }
 }
