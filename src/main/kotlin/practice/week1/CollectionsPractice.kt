@@ -153,7 +153,7 @@ object CollectionsPractice {
             CustomerSummary(
                 customerId = entry.key,
                 orderCount = entry.value.size,
-                totalAmount = entry.value.flatMap{ it.items }.fold(0) {total, item -> total + item.quantity * item.unitPrice}
+                totalAmount = totalAmount(entry.value)
             )
         }.sortedBy{ it.customerId }
     }
