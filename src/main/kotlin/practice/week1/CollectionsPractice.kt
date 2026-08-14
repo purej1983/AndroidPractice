@@ -59,7 +59,7 @@ object CollectionsPractice {
      * Requirement: use `mapNotNull`.
      */
     fun couponCodes(orders: List<Order>): List<String> {
-        TODO()
+        return orders.mapNotNull{ it.couponCode }
     }
 
     /**
