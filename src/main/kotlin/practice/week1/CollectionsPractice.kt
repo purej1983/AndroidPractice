@@ -173,6 +173,6 @@ object CollectionsPractice {
      * Requirement: use Sequence operations. Do not call `toList()`.
      */
     fun firstPaidAmount(orders: Sequence<Order>): Int? {
-        TODO()
+        return orders.first{ it.status === OrderStatus.PAID }.map{ it.unitPrice * it.quantity }
     }
 }
