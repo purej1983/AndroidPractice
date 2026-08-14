@@ -93,7 +93,7 @@ object CollectionsPractice {
      * Requirement: use `groupBy`.
      */
     fun ordersByCustomer(orders: List<Order>): Map<String, List<Order>> {
-        TODO()
+        return orders.groupBy{ it.customerId }
     }
 
     /**
