@@ -147,7 +147,7 @@ object CollectionsPractice {
     fun customerSummaries(orders: List<Order>): List<CustomerSummary> {
         return orders
         .asSequence()
-        .filter{ it.status !== OrderStatus.CANCELLED }
+        .filter{ it.status != OrderStatus.CANCELLED }
         .groupBy{ it.customerId }
         .map{entry ->
             CustomerSummary(
