@@ -128,10 +128,7 @@ object CollectionsPractice {
      * Requirement: use `all`.
      */
     fun allFulfilled(orders: List<Order>): Boolean {
-        return orders.all{ it.status in 
-        setOf(
-            OrderStatus.PAID,
-            OrderStatus.SHIPPED)}
+        return orders.all{ it.status == OrderStatus.PAID || it.status == OrderStatus.SHIPPED }
     }
 
     /**
