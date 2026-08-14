@@ -48,7 +48,7 @@ object CollectionsPractice {
      * Requirement: use `map`.
      */
     fun orderIds(orders: List<Order>): List<String> {
-        TODO()
+        return orders.map{ it.id }
     }
 
     /**
