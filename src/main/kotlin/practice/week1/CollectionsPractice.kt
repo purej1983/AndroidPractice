@@ -148,7 +148,17 @@ object CollectionsPractice {
      * Requirement: start with `asSequence()`.
      */
     fun customerSummaries(orders: List<Order>): List<CustomerSummary> {
-        TODO()
+        return orders
+        .asSequence()
+        .filter{ it.status !== OrderStatus.CANCELLED }
+        .groupBy{ it.customerId }
+        .map{entry ->
+            CustomerSummary(
+                customerId = entry.key,
+                orderCount = entry.value.size,
+                totalAmount = entry.value.fold(0) {it.quantity * it.unitPrice}
+            )
+        }
     }
 
     /**
