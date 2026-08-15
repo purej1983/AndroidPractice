@@ -100,7 +100,10 @@ object DataClassesPractice {
      * Requirement: use `when`.
      */
     fun <T> dataOrNull(result: LoadResult<T>): T? {
-        TODO("Exercise 6: use when to unwrap Success")
+        return when(result) {
+            is LoadResult.Success -> result.data
+            else -> null
+        }
     }
 
     /**
