@@ -50,7 +50,7 @@ object DataClassesPractice {
      * Requirement: use `copy`. Do not mutate [account].
      */
     fun withEmail(account: Account, email: String): Account {
-        TODO("Exercise 2: use copy to replace email")
+        return account.copy(email = email)
     }
 
     /**
