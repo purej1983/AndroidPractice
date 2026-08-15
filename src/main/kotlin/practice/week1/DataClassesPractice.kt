@@ -75,7 +75,7 @@ object DataClassesPractice {
      * Requirement: compare with `==`, not `===`.
      */
     fun replacedIfChanged(current: Account, updated: Account): Account {
-        TODO("Exercise 4: return current when ==, otherwise updated")
+        return if (current == updated) current else updated
     }
 
     /**
