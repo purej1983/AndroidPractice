@@ -39,7 +39,7 @@ object DataClassesPractice {
      * Requirement: use `copy`. Do not mutate [account].
      */
     fun deactivate(account: Account): Account {
-        TODO("Exercise 1: use copy to return an inactive account")
+        return account.copy(active = false)
     }
 
     /**
