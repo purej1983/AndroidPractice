@@ -187,6 +187,10 @@ object DataClassesPractice {
      * Requirement: use `when`.
      */
     fun toScreenState(result: LoadResult<Account>): ScreenState {
-        TODO("Exercise 11: map LoadResult to ScreenState with when")
+        return when(result) {
+            is LoadResult.Loading -> ScreenState.Loading
+            is LoadResult.Success -> ScreenState.Content(title = result.data.displayName, subtitle = result.data.email)
+            is LoadResult.Error -> ScreenState.Failed(message = result.message)
+        }
     }
 }
