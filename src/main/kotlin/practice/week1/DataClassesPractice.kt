@@ -147,8 +147,8 @@ object DataClassesPractice {
      */
     fun <T> recoverError(result: LoadResult<T>, fallback: T): LoadResult<T> {
         return when(result) {
-            is LoadResult.Loading -> result,
-            is LoadResult.Success -> result,
+            is LoadResult.Loading -> result
+            is LoadResult.Success -> result
             is LoadResult.Error -> LoadResult.Success(fallback)
         }
     }
