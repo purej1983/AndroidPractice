@@ -115,7 +115,10 @@ object DataClassesPractice {
      * Requirement: use `when`.
      */
     fun <T> requireData(result: LoadResult<T>): T {
-        TODO("Exercise 7: use when; throw IllegalStateException when not Success")
+        return when(result) {
+            is LoadResult.Success -> result.data
+            else -> throw IllegalStateException()
+        }
     }
 
     /**
