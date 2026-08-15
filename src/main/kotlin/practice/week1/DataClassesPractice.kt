@@ -130,7 +130,11 @@ object DataClassesPractice {
      * Requirement: use `when`.
      */
     fun <T, R> mapData(result: LoadResult<T>, transform: (T) -> R): LoadResult<R> {
-        TODO("Exercise 8: use when to map Success and pass through other states")
+        return when(result) {
+            is LoadResult.Loading -> result
+            is LoadResult.Error -> result
+            is LoadResult.Success -> LoadResult.Success(transform(result.data))
+        }
     }
 
     /**
