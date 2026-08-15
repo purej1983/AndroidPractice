@@ -62,7 +62,7 @@ object DataClassesPractice {
      * Requirement: copy both [Account] and [Address]. Do not mutate [account].
      */
     fun withCity(account: Account, city: String): Account {
-        TODO("Exercise 3: copy account and address to replace city")
+        return account.copy(address = account.address.copy(city = city))
     }
 
     /**
