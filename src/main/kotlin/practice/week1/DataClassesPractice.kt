@@ -169,7 +169,11 @@ object DataClassesPractice {
         onSuccess: (T) -> R,
         onError: (String) -> R
     ): R {
-        TODO("Exercise 10: use when to fold every LoadResult branch")
+        return when(result) {
+            is LoadResult.Loading -> onLoading()
+            is LoadResult.Success -> onSuccess(result.data)
+            is LoadResult.Error ->  onError(result.message)
+        }
     }
 
     /**
