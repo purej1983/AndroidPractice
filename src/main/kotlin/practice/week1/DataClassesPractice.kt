@@ -146,7 +146,11 @@ object DataClassesPractice {
      * Requirement: use `when`.
      */
     fun <T> recoverError(result: LoadResult<T>, fallback: T): LoadResult<T> {
-        TODO("Exercise 9: use when to recover Error into Success")
+        return when(result) {
+            is LoadResult.Loading -> result,
+            is LoadResult.Success -> result,
+            is LoadResult.Error -> LoadResult.Success(fallback)
+        }
     }
 
     /**
