@@ -86,7 +86,10 @@ object DataClassesPractice {
      * Requirement: use `when`.
      */
     fun isLoading(result: LoadResult<*>): Boolean {
-        TODO("Exercise 5: use when to detect Loading")
+        return when(result) {
+            LoadResult.Loading -> true
+            else -> false
+        }
     }
 
     /**
