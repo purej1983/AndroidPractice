@@ -15,7 +15,7 @@ object HigherOrderFunctionsPractice {
      * Requirement: use [predicate]. Do not hardcode the filter condition.
      */
     fun <T> keepIf(items: List<T>, predicate: (T) -> Boolean): List<T> {
-        TODO()
+        return items.filter(predicate)
     }
 
     /**
