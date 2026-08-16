@@ -138,7 +138,10 @@ fun String.isValidEmail(): Boolean {
  * Requirement: implement as an extension on [List].
  */
 fun <T> List<T>.secondOrNull(): T? {
-    TODO()
+    return if(size<2)
+        null
+    else
+        get(2)
 }
 
 /**
