@@ -165,5 +165,5 @@ fun <T> List<T>.secondOrNull(): T? {
  * Requirement: use `inline` and `reified`. Do not use Java `Class` checks.
  */
 inline fun <reified T> Any?.castOrNull(): T? {
-    TODO()
+    return this as? T
 }
