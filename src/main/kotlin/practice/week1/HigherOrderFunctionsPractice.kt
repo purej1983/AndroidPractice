@@ -153,7 +153,7 @@ fun <T> List<T>.secondOrNull(): T? {
     return if(size<2)
         null
     else
-        get(2)
+        get(1)
 }
 
 /**
