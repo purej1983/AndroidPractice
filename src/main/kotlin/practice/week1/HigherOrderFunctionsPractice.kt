@@ -104,7 +104,7 @@ object HigherOrderFunctionsPractice {
      * Requirement: use [block] as a `StringBuilder.() -> Unit` receiver lambda.
      */
     fun buildText(block: StringBuilder.() -> Unit): String {
-        TODO()
+        return StringBuilder().apply(block).toString()
     }
 
     /**
