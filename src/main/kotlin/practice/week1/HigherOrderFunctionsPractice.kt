@@ -126,7 +126,8 @@ object HigherOrderFunctionsPractice {
  * Requirement: implement as an extension on [String].
  */
 fun String.isValidEmail(): Boolean {
-    TODO()
+    val parts = split('@')
+    return parts.size == 2 && parts[0].isNotBlank() && parts[1].isNotBlank()
 }
 
 /**
