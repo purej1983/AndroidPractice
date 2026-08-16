@@ -38,7 +38,7 @@ object HigherOrderFunctionsPractice {
      * [transformEach] or `map`. Do not write a lambda with a body.
      */
     fun fieldNames(fields: List<FormField>): List<String> {
-        TODO()
+        return transformEach(fields, FormField::name)
     }
 
     /**
