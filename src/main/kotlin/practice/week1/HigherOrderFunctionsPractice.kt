@@ -86,7 +86,13 @@ object HigherOrderFunctionsPractice {
         shouldRetry: (T) -> Boolean,
         block: () -> T
     ): T {
-        TODO()
+        var last = block()
+        var remaining = times - 1
+        while (shouldRetry(last) && remaining > 0) {
+            last = block()
+            remaining--
+        }
+        return last
     }
 
     /**
