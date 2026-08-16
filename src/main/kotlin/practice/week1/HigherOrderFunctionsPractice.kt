@@ -49,7 +49,7 @@ object HigherOrderFunctionsPractice {
      * Requirement: return a function. Do not apply it to a value here.
      */
     fun startsWith(prefix: String): (String) -> Boolean {
-        TODO()
+        return { value -> value.startsWith(prefix) }
     }
 
     /**
