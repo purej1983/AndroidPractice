@@ -65,7 +65,9 @@ object HigherOrderFunctionsPractice {
      * function is called.
      */
     fun <T> allOf(vararg validators: (T) -> String?): (T) -> String? {
-        TODO()
+        return { value ->
+            validators.firstNotNullOfOrNull { validator -> validator(value) }
+        }
     }
 
     /**
