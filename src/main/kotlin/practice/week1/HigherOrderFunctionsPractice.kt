@@ -120,7 +120,11 @@ object HigherOrderFunctionsPractice {
         onError: (Throwable) -> T,
         block: () -> T
     ): T {
-        TODO()
+        return try {
+            block()
+        } catch (e: Exception) {
+            onError(e)
+        }
     }
 }
 
