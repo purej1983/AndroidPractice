@@ -26,7 +26,7 @@ object HigherOrderFunctionsPractice {
      * Requirement: use [transform]. Do not hardcode the mapping.
      */
     fun <T, R> transformEach(items: List<T>, transform: (T) -> R): List<R> {
-        TODO()
+        return items.map(transform)
     }
 
     /**
