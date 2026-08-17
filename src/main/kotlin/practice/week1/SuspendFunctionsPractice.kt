@@ -147,7 +147,7 @@ object SuspendFunctionsPractice {
         id: String,
         transform: suspend (RemoteUser) -> R
     ): R {
-        TODO()
+        return transform(loadUser(source, id))
     }
 
     /**
