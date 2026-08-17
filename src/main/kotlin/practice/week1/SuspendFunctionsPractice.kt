@@ -1,6 +1,7 @@
 package practice.week1
 
 import kotlinx.coroutines.delay
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Day 6 — Suspend functions.
@@ -124,7 +125,13 @@ object SuspendFunctionsPractice {
         id: String,
         fallback: RemoteUser
     ): RemoteUser {
-        TODO()
+        return try{
+            loadUser(source, id)
+        } catch(e: CancellationException) {
+            throw e
+        } catch(e: Exception) {
+            fallback
+        }
     }
 
     /**
