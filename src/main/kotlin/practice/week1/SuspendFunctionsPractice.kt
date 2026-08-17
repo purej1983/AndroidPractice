@@ -83,7 +83,7 @@ object SuspendFunctionsPractice {
      * Return null when the user is missing. Do not throw.
      */
     suspend fun loadUserOrNull(source: UserDataSource, id: String): RemoteUser? {
-        TODO()
+        return source.fetchUser(id)
     }
 
     /**
@@ -95,7 +95,7 @@ object SuspendFunctionsPractice {
      * Requirement: fetch with a suspend call, then read `name`.
      */
     suspend fun loadUserName(source: UserDataSource, id: String): String {
-        TODO()
+        return source.fetchUser(id)?.name ?: throw UserNotFoundException(id)
     }
 
     /**
