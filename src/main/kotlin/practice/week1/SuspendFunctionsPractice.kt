@@ -62,7 +62,8 @@ object SuspendFunctionsPractice {
      * Requirement: use `delay`. Do not use `Thread.sleep`.
      */
     suspend fun fetchAfterDelay(id: String, name: String, delayMillis: Long): RemoteUser {
-        TODO()
+        delay(delayMillis)
+        return RemoteUser(id = id, name = name)
     }
 
     /**
