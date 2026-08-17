@@ -107,7 +107,7 @@ object SuspendFunctionsPractice {
      * Requirement: fetch sequentially, one after another. Do not load concurrently.
      */
     suspend fun loadUsers(source: UserDataSource, ids: List<String>): List<RemoteUser> {
-        TODO()
+        return ids.mapNotNull { loadUserOrNull(source, it) }
     }
 
     /**
