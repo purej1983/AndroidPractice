@@ -2,6 +2,9 @@ package practice.week1
 
 import kotlinx.coroutines.delay
 import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.CoroutineName
+import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.withContext
 
 /**
  * Day 6 — Suspend functions.
@@ -158,7 +161,7 @@ object SuspendFunctionsPractice {
      * Requirement: read `coroutineContext`. This function must stay `suspend`.
      */
     suspend fun currentCoroutineName(): String? {
-        TODO()
+        return coroutineContext[CoroutineName]?.name
     }
 
     /**
@@ -169,6 +172,8 @@ object SuspendFunctionsPractice {
      * Requirement: use `withContext`. Do not change dispatchers.
      */
     suspend fun <T> withName(name: String, block: suspend () -> T): T {
-        TODO()
+        return withContext(CoroutineName(name)) {
+            block()
+        }
     }
 }
