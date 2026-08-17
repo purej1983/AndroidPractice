@@ -73,7 +73,7 @@ object SuspendFunctionsPractice {
      * If the user is missing, throw [UserNotFoundException] with that id.
      */
     suspend fun loadUser(source: UserDataSource, id: String): RemoteUser {
-        TODO()
+        return source.fetchUser(id) ?: throw UserNotFoundException(id)
     }
 
     /**
