@@ -130,7 +130,9 @@ object LaunchAsyncPractice {
         orderApi: FakeOrderApi,
         userId: String
     ): Dashboard {
-        TODO()
+        val user = userApi.fetchUser(userId)
+        val orders = orderApi.fetchOrders(userId)
+        return Dashboard(user, orders)
     }
 
     /**
