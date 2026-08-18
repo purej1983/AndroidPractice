@@ -3,6 +3,7 @@ package practice.week1
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Day 7 — `launch` vs `async`.
@@ -207,7 +208,12 @@ object LaunchAsyncPractice {
      * Do not log sequentially.
      */
     suspend fun logAll(logger: FakeLogger, messages: List<String>): Int {
-        TODO()
+        return coroutineScope {
+            messages.forEach { message ->
+                launch { logger.log(message) }
+            }
+            messages.size
+        }
     }
 
     /**
