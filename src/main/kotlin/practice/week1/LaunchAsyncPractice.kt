@@ -191,7 +191,10 @@ object LaunchAsyncPractice {
         logger: FakeLogger,
         userId: String
     ): DashboardUser {
-        TODO()
+        return coroutineScope {
+            launch { logger.log("loading:$userId") }
+            userApi.fetchUser(userId)
+        }
     }
 
     /**
