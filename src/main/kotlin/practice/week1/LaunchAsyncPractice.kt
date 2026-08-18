@@ -1,5 +1,7 @@
 package practice.week1
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 
 /**
@@ -147,7 +149,11 @@ object LaunchAsyncPractice {
         orderApi: FakeOrderApi,
         userId: String
     ): Dashboard {
-        TODO()
+        return coroutineScope {
+            val user = async { userApi.fetchUser(userId) }
+            val orders = async { orderApi.fetchOrders(userId) }
+            Dashboard(user.await(), orders.await())
+        }
     }
 
     /**
