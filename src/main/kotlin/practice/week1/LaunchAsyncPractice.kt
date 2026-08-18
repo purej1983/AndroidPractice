@@ -4,6 +4,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.awaitAll
 
 /**
  * Day 7 — `launch` vs `async`.
@@ -227,7 +228,11 @@ object LaunchAsyncPractice {
         userApi: FakeUserApi,
         ids: List<String>
     ): List<DashboardUser> {
-        TODO()
+        return coroutineScope {
+            ids.map { userId ->
+                async { userApi.fetchUser(userId) }
+            }.awaitAll()
+        }
     }
 
     /**
