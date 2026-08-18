@@ -169,7 +169,13 @@ object LaunchAsyncPractice {
         orderApi: FakeOrderApi,
         userId: String
     ): Dashboard {
-        TODO()
+        return coroutineScope {
+            val user = async { userApi.fetchUser(userId) }
+            val orders = async { orderApi.fetchOrders(userId) }
+            val loadedOrders = orders.await()
+            val loadedUser = user.await()
+            Dashboard(loadedUser, loadedOrders)
+        }
     }
 
     /**
