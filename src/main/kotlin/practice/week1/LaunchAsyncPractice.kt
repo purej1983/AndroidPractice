@@ -249,6 +249,11 @@ object LaunchAsyncPractice {
         profileApi: FakeProfileApi,
         userId: String
     ): FullDashboard {
-        TODO()
+        return coroutineScope {
+            val user = userApi.fetchUser(userId)
+            val orders = async { orderApi.fetchOrders(userId) }
+            val profile = async { profileApi.fetchProfile(userId) }
+            FullDashboard(user, orders.await(), profile.await())
+        }
     }
 }
