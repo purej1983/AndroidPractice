@@ -228,11 +228,13 @@ object CancellationPractice {
         query: String,
         notifier: FakeNotifier
     ): List<SearchDocument> {
-        val result = api.search(query)
-        withContext(NonCancellable) {
-            notifier.notify("done:{query}")
+        try {
+            return api.search(query)
+        } finally {
+            withContext(NonCancellable) {
+                notifier.notify("done:$query")
+            }
         }
-        return result
     }
 
     /**
