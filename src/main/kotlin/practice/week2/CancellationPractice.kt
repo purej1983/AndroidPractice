@@ -6,6 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * Day 8 — Cancellation.
@@ -203,7 +204,9 @@ object CancellationPractice {
         query: String,
         timeoutMillis: Long
     ): List<SearchDocument>? {
-        TODO()
+        return withTimeoutOrNull(timeoutMillis) {
+            api.search(query)
+        }
     }
 
     /**
