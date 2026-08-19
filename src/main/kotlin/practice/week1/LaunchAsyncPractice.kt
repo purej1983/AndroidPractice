@@ -152,9 +152,9 @@ object LaunchAsyncPractice {
         userId: String
     ): Dashboard {
         return coroutineScope {
-            val user = async { userApi.fetchUser(userId) }
-            val orders = async { orderApi.fetchOrders(userId) }
-            Dashboard(user.await(), orders.await())
+            val userDeferred = async { userApi.fetchUser(userId) }
+            val ordersDeferred = async { orderApi.fetchOrders(userId) }
+            Dashboard(userDeferred.await(), ordersDeferred.await())
         }
     }
 
