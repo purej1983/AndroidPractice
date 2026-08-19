@@ -95,7 +95,11 @@ object CancellationPractice {
         tracker: ScanTracker,
         delayPerDocumentMillis: Long
     ): List<String> {
-        TODO()
+        return documents.map { document ->
+            delay(delayPerDocumentMillis)
+            tracker.record(document.id)
+            document.id
+        }
     }
 
     /**
