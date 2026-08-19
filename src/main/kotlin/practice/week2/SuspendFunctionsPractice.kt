@@ -1,4 +1,4 @@
-package practice.week1
+package practice.week2
 
 import kotlinx.coroutines.delay
 import kotlin.coroutines.cancellation.CancellationException

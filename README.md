@@ -287,12 +287,12 @@ Behavioural requirements:
 
 ```text
 src/
-├── main/kotlin/
-│   ├── week1/
-│   ├── week2/
-│   ├── week3/
-│   └── week4/
-└── test/kotlin/
+├── main/kotlin/practice/
+│   ├── week1/   # Days 1–5  language depth
+│   ├── week2/   # Days 6–10 coroutines
+│   ├── week3/   # Days 11–15 Flow
+│   └── week4/   # Days 16–20 architecture
+└── test/kotlin/practice/
     ├── week1/
     ├── week2/
     ├── week3/
