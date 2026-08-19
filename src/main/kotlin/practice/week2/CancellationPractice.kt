@@ -2,11 +2,14 @@ package practice.week2
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
-import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * Day 8 — Cancellation.
@@ -225,7 +228,11 @@ object CancellationPractice {
         query: String,
         notifier: FakeNotifier
     ): List<SearchDocument> {
-        TODO()
+        val result = api.search(query)
+        withContext(NonCancellable) {
+            notifier.notify("done:{query}")
+        }
+        return result
     }
 
     /**
@@ -246,6 +253,9 @@ object CancellationPractice {
         delayPerDocumentMillis: Long,
         onResult: (List<SearchDocument>) -> Unit
     ): Job {
-        TODO()
+        return scope.launch { 
+            val result = searchDocuments(documents, query, tracker, delayPerDocumentMillis)  
+            onResult(result)
+        }
     }
 }
