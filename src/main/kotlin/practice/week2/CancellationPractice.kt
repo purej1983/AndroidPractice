@@ -76,7 +76,8 @@ object CancellationPractice {
      * Requirement: use `delay`. Do not use `Thread.sleep`.
      */
     suspend fun delayedValue(value: String, delayMillis: Long): String {
-        TODO()
+        delay(delayMillis)
+        return value
     }
 
     /**
