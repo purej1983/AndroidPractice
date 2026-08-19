@@ -181,7 +181,12 @@ object CancellationPractice {
      * coroutine must not return an empty list.
      */
     suspend fun searchOrEmpty(api: FakeSearchApi, query: String): List<SearchDocument> {
-        TODO()
+        try {
+            return api.search(query)
+        } catch (e: SearchFailedException) {
+            return listOf()
+        }
+        
     }
 
     /**
