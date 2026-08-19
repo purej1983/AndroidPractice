@@ -3,6 +3,8 @@ package practice.week2
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
+import kotlin.coroutines.coroutineContext
 
 /**
  * Day 8 — Cancellation.
@@ -142,7 +144,10 @@ object CancellationPractice {
      * stops remaining steps. Do not add `delay` here.
      */
     suspend fun runSteps(count: Int, onStep: (Int) -> Unit) {
-        TODO()
+        for (n in 1..count) {
+            coroutineContext.ensureActive()
+            onStep(n)
+        }
     }
 
     /**
