@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
 
 /**
@@ -159,7 +160,15 @@ object CancellationPractice {
      * [CancellationException] to the caller.
      */
     suspend fun ticksCompleted(tickMillis: Long): Int {
-        TODO()
+        var count = 0
+        try {
+            while (true) {
+                delay(tickMillis)
+                count++
+            }
+        } catch (e: CancellationException) {
+            return count
+        }
     }
 
     /**
