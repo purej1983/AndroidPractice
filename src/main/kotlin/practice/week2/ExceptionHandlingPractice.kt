@@ -262,7 +262,15 @@ object ExceptionHandlingPractice {
         weatherApi: FakeWeatherApi,
         userId: String
     ): HomeScreen {
-        TODO()
+        return supervisorScope {
+            val userDeferred = async { userApi.fetchUser(userId) }
+            val messagesDeferred = async { messagesApi.fetchMessages(userId) }
+            val weatherDeferred = async { weatherApi.fetchWeather(userId) }
+            val weather = weatherDeferred.await()
+            val user = userDeferred.await()
+            val messages = messagesDeferred.await()
+            HomeScreen(user = user, messages = messages, weather = weather)
+        }
     }
 
     /**
