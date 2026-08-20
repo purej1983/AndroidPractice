@@ -319,6 +319,6 @@ object ExceptionHandlingPractice {
         weatherApi: FakeWeatherApi,
         userId: String
     ): Deferred<WeatherForecast> {
-        TODO()
+        return scope.async { weatherApi.fetchWeather(userId) }
     }
 }
