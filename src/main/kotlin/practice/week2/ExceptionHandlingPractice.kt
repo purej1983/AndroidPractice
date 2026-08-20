@@ -293,8 +293,8 @@ object ExceptionHandlingPractice {
         userId: String,
         onMessages: (List<InboxMessage>) -> Unit
     ): IndependentLoads {
-        val context = parent.coroutineContext + SupervisorJob(parent.coroutineContext[Job]) + handler
-        val scope = CoroutineScope(context)
+        val supervisorJob = SupervisorJob(parent.coroutineContext[Job])
+        val scope = CoroutineScope(parent.coroutineContext + supervisorJob + handler)
         val messagesJob = scope.launch {
             val result = messagesApi.fetchMessages(userId)
             onMessages(result)
@@ -302,6 +302,7 @@ object ExceptionHandlingPractice {
         val weatherJob = scope.launch {
             weatherApi.fetchWeather(userId)
         }
+        supervisorJob.complete()
         return IndependentLoads(messagesJob, weatherJob)
     }
 
