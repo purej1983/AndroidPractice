@@ -128,10 +128,10 @@ object CancellationPractice {
         tracker: ScanTracker,
         delayPerDocumentMillis: Long
     ): List<SearchDocument> {
+        val needle = query.lowercase()
         return documents.mapNotNull { document ->
             delay(delayPerDocumentMillis)
-            tracker.record(document.id)
-            val needle = query.lowercase()
+            tracker.record(document.id)            
             if(needle in document.title.lowercase() || needle in document.body.lowercase()) {
                 document
             } else {
