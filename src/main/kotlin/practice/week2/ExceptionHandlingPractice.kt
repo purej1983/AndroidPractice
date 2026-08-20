@@ -1,5 +1,6 @@
 package practice.week2
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -194,7 +195,22 @@ object ExceptionHandlingPractice {
         weatherApi: FakeWeatherApi,
         userId: String
     ): HomeScreen? {
-        TODO()
+        return try {
+            coroutineScope {
+                val userDeferred = async { userApi.fetchUser(userId) }
+                val messagesDeferred = async { messagesApi.fetchMessages(userId) }
+                val weatherDeferred = async { weatherApi.fetchWeather(userId) }
+                HomeScreen(
+                    user = userDeferred.await(),
+                    messages = messagesDeferred.await(),
+                    weather = weatherDeferred.await()
+                )
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            null
+        }
     }
 
     /**
