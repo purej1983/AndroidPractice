@@ -124,7 +124,7 @@ object ExceptionHandlingPractice {
      * Requirement: do not catch. Let [HomeUserLoadException] propagate.
      */
     suspend fun loadUser(userApi: FakeHomeUserApi, userId: String): HomeUser {
-        TODO()
+        return userApi.fetchUser(userId)
     }
 
     /**
