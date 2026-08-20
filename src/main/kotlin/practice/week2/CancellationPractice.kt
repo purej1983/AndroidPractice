@@ -166,13 +166,13 @@ object CancellationPractice {
     suspend fun ticksCompleted(tickMillis: Long): Int {
         var count = 0
         try {
-            while (true) {
+            while (coroutineContext.isActive) {
                 delay(tickMillis)
                 count++
             }
-        } catch (e: CancellationException) {
-            return count
+        } catch (_: CancellationException) {            
         }
+        return count
     }
 
     /**
