@@ -142,7 +142,10 @@ object ExceptionHandlingPractice {
         weatherApi: FakeWeatherApi,
         userId: String
     ): HomeScreen {
-        TODO()
+        val user = userApi.fetchUser(userId)
+        val messages = messagesApi.fetchMessages(userId)
+        val weather = weatherApi.fetchWeather(userId)
+        return HomeScreen(user = user, messages = messages, weather = weather)
     }
 
     /**
