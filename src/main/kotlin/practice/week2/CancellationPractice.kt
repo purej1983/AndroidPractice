@@ -188,7 +188,7 @@ object CancellationPractice {
         try {
             return api.search(query)
         } catch (e: SearchFailedException) {
-            return listOf()
+            return emptyList()
         }
         
     }
