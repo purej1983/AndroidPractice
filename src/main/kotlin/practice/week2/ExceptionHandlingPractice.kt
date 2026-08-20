@@ -5,9 +5,11 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 
 /**
@@ -291,7 +293,16 @@ object ExceptionHandlingPractice {
         userId: String,
         onMessages: (List<InboxMessage>) -> Unit
     ): IndependentLoads {
-        TODO()
+        val context = parent.coroutineContext + SupervisorJob(parent.coroutineContext[Job]) + handler
+        val scope = CoroutineScope(context)
+        val messagesJob = scope.launch {
+            val result = messagesApi.fetchMessages(userId)
+            onMessages(result)
+        }
+        val weatherJob = scope.launch {
+            weatherApi.fetchWeather(userId)
+        }
+        return IndependentLoads(messagesJob, weatherJob)
     }
 
     /**
