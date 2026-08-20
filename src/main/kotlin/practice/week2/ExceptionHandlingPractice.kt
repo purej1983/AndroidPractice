@@ -8,6 +8,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.supervisorScope
 
 /**
  * Day 9 — Exception handling and supervision.
@@ -230,7 +231,19 @@ object ExceptionHandlingPractice {
         weatherApi: FakeWeatherApi,
         userId: String
     ): HomeScreen {
-        TODO()
+        return supervisorScope {
+            val userDeferred = async { userApi.fetchUser(userId) }
+            val messagesDeferred = async { messagesApi.fetchMessages(userId) }
+            val weatherDeferred = async { weatherApi.fetchWeather(userId) }
+            val user = userDeferred.await()
+            val messages = messagesDeferred.await()
+            val weather = try {
+                weatherDeferred.await()
+            } catch (e: WeatherLoadException) {
+                null
+            }
+            HomeScreen(user = user, messages = messages, weather = weather)
+        }
     }
 
     /**
