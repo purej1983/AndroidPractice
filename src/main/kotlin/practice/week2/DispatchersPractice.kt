@@ -3,6 +3,7 @@ package practice.week2
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.ContinuationInterceptor
 import kotlin.coroutines.coroutineContext
 
@@ -137,7 +138,9 @@ object DispatchersPractice {
      * Requirement: use `withContext`. Do not call [block] on the current dispatcher.
      */
     suspend fun <T> runOn(dispatcher: CoroutineDispatcher, block: suspend () -> T): T {
-        TODO()
+        return withContext(dispatcher) {
+            block()
+        }
     }
 
     /**
