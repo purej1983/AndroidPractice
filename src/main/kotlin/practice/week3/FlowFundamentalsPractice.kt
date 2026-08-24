@@ -2,6 +2,7 @@ package practice.week3
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Day 11 — Flow fundamentals.
@@ -81,7 +82,9 @@ object FlowFundamentalsPractice {
      * Requirement: use `flow { }` and `emit`. Do not use `flowOf` or `asFlow`.
      */
     fun <T> emitEach(values: List<T>): Flow<T> {
-        TODO()
+        return flow {
+            values.forEach { emit(it) }
+        }
     }
 
     /**
