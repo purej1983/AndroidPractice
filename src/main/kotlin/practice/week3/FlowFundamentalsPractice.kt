@@ -3,6 +3,7 @@ package practice.week3
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Day 11 — Flow fundamentals.
@@ -96,7 +97,12 @@ object FlowFundamentalsPractice {
      * Requirement: use `flow`, `emit`, and `delay`. Do not use `Thread.sleep`.
      */
     fun <T> emitEachDelayed(values: List<T>, delayMillis: Long): Flow<T> {
-        TODO()
+        return flow {
+            values.forEach {
+                delay(delayMillis.milliseconds)
+                emit(it)
+            }
+        }
     }
 
     /**
