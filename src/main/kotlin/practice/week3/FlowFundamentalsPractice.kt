@@ -133,7 +133,11 @@ object FlowFundamentalsPractice {
      * Do not share one running producer across collectors.
      */
     fun observeOrders(store: FakeOrderStore): Flow<List<Order>> {
-        TODO()
+        return flow {
+            for(i in 0 until store.snapshotCount) {
+                emit(store.readSnapshot(i))
+            }
+        }
     }
 
     /**
