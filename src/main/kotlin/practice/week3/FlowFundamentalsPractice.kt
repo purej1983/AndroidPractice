@@ -113,7 +113,11 @@ object FlowFundamentalsPractice {
      * Requirement: use `collect`. Do not use `toList()`.
      */
     suspend fun <T> collectAll(flow: Flow<T>): List<T> {
-        TODO()
+        val values = mutableListOf<T>()
+        flow.collect { value ->
+            values += value
+        }
+        return values
     }
 
     /**
