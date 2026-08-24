@@ -212,7 +212,14 @@ object DispatchersPractice {
         user: AccountUser,
         default: CoroutineDispatcher
     ): AccountSummary {
-        TODO()
+        return withContext(default) {
+            AccountSummary(
+                userId = user.id,
+                displayName = user.name.uppercase(),
+                orderIds = user.orders.map { it.id }.sorted(),
+                totalAmount = user.orders.sumOf { it.amount }
+            )
+        }
     }
 
     /**
