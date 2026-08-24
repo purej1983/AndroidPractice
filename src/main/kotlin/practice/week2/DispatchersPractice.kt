@@ -238,7 +238,11 @@ object DispatchersPractice {
         io: CoroutineDispatcher,
         main: CoroutineDispatcher
     ): AccountUser {
-        TODO()
+        val user = fetchUser(network, userId, io)
+        withContext(main) {
+            renderer.show(user.name)
+        }
+        return user
     }
 
     /**
