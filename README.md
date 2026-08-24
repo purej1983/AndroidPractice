@@ -17,17 +17,54 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 ---
 
+# Progress
+
+**10 / 20 days implemented.** Week 1 and Week 2 production code is in place; all **225** unit tests pass. Week 3 (Flow) and Week 4 (architecture) are not started.
+
+| Day | Topic | Status | Exercises | Tests | Source |
+|---|---|---|---|---|---|
+| 1 | Scope Functions | Implemented | 4 | 5 | `week1/ScopeFunctionsPractice.kt` |
+| 2 | Null Safety | Implemented | 5 | 13 | `week1/NullSafetyPractice.kt` |
+| 3 | Collections and Sequences | Implemented | 11 | 21 | `week1/CollectionsPractice.kt` |
+| 4 | Data Classes and Sealed Types | Implemented | 11 | 20 | `week1/DataClassesPractice.kt` |
+| 5 | Higher-Order Functions | Implemented | 11 | 29 | `week1/HigherOrderFunctionsPractice.kt` |
+| 6 | Suspend Functions | Implemented | 10 | 25 | `week2/SuspendFunctionsPractice.kt` |
+| 7 | `launch` vs `async` | Implemented | 7 | 25 | `week2/LaunchAsyncPractice.kt` |
+| 8 | Cancellation | Implemented | 9 | 26 | `week2/CancellationPractice.kt` |
+| 9 | Exception Handling and Supervision | Implemented | 8 | 29 | `week2/ExceptionHandlingPractice.kt` |
+| 10 | Dispatchers and Threading | Implemented | 9 | 32 | `week2/DispatchersPractice.kt` |
+| 11 | Flow Fundamentals | Not started | — | — | — |
+| 12 | Flow Operators | Not started | — | — | — |
+| 13 | StateFlow | Not started | — | — | — |
+| 14 | SharedFlow | Not started | — | — | — |
+| 15 | Channel vs SharedFlow vs StateFlow | Not started | — | — | — |
+| 16 | Repository Pattern | Not started | — | — | — |
+| 17 | State Management | Not started | — | — | — |
+| 18 | Race Conditions and Search | Not started | — | — | — |
+| 19 | Offline-First Architecture | Not started | — | — | — |
+| 20 | Final Challenge: Task Manager | Not started | — | — | — |
+
+Matching tests live under `src/test/kotlin/practice/` with the same week and file names.
+
+---
+
 # Week 1 — Kotlin Language Depth
 
-## Day 1 — Scope Functions
-Topics: `let`, `run`, `apply`, `also`, `with`, `this` vs `it`, receiver vs lambda return value.
+**Status: implemented.** Days 1–5, 42 exercises, 88 tests passing.
 
-Practice:
-- Normalize nullable email with `let`.
-- Configure an object with `apply`.
-- Add side effects/logging with `also`.
-- Calculate a value with `run`.
-- Work with an existing receiver using `with`.
+## Day 1 — Scope Functions
+
+**Status: implemented.**
+
+Topics: `let`, `run`, `apply`, `also`, `this` vs `it`, receiver vs lambda return value.
+
+Exercises:
+- [x] `normalizedEmail` — uppercase a nullable email with `let`, fallback `"NO_EMAIL"`.
+- [x] `displayName` — build `"Name <email>"` with `run`.
+- [x] `activate` — trim, lowercase, and activate the same `User` with `apply`.
+- [x] `addAndLog` — mutate a list, log a side effect, and return the same instance with `also`.
+
+The original outline also mentioned `with`. There is no dedicated `with` exercise or test in this repo.
 
 Tests verify null handling, return values, side effects, and same-object identity.
 
@@ -38,73 +75,179 @@ Interview targets:
 - When do scope functions hurt readability?
 
 ## Day 2 — Null Safety
+
+**Status: implemented.**
+
 Topics: `?.`, `?:`, nullable types, `requireNotNull`, `checkNotNull`, avoiding `!!`.
 
-Practice: convert nullable API DTOs into valid domain models.
+Exercises:
+- [x] `lowercaseEmail` — safe call `?.`.
+- [x] `displayName` — Elvis `?:` fallbacks.
+- [x] `requireId` — `requireNotNull` for a required field.
+- [x] `checkToken` — `checkNotNull` for a required token.
+- [x] `toUserProfile` — convert a nullable API DTO into a valid domain model.
 
 Tests verify missing optional/required fields, fallback values, and valid conversions.
 
 ## Day 3 — Collections and Sequences
+
+**Status: implemented.**
+
 Topics: `map`, `filter`, `mapNotNull`, `associate`, `groupBy`, `fold`, `any`, `all`, `Sequence`.
 
-Practice: process orders, remove cancelled items, group by customer, calculate totals and summaries.
-
-Experiment with List chains versus `asSequence()`.
+Exercises:
+- [x] `activeOrders` — `filter`.
+- [x] `orderIds` — `map`.
+- [x] `couponCodes` — `mapNotNull`.
+- [x] `itemNames` — `flatMap`.
+- [x] `ordersById` — `associate`.
+- [x] `ordersByCustomer` — `groupBy`.
+- [x] `totalAmount` — `fold`.
+- [x] `hasCancelled` — `any`.
+- [x] `allFulfilled` — `all`.
+- [x] `customerSummaries` — Sequence pipeline (`asSequence()`).
+- [x] `firstPaidAmount` — lazy evaluation on `Sequence`.
 
 Interview targets: List vs Sequence, `map` vs `flatMap`, `fold`, lazy evaluation.
 
 ## Day 4 — Data Classes and Sealed Types
+
+**Status: implemented.**
+
 Topics: `data class`, `copy`, `==` vs `===`, `sealed class`, `sealed interface`, exhaustive `when`.
 
-Practice: model `Loading`, `Success`, and `Error` results.
+Exercises:
+- [x] `deactivate` — `copy`.
+- [x] `withEmail` — copy one property.
+- [x] `withCity` — nested copy.
+- [x] `replacedIfChanged` — `==` vs `===`.
+- [x] `isLoading` — `when` on sealed result.
+- [x] `dataOrNull` — extract success data.
+- [x] `requireData` — error on non-success.
+- [x] `mapData` — exhaustive `when`.
+- [x] `recoverError` — turn error into success.
+- [x] `fold` — collapse sealed states.
+- [x] `toScreenState` — map `Loading` / `Success` / `Error` to UI states.
 
 Tests verify equality, copying, state conversion, and expected states.
 
 ## Day 5 — Higher-Order Functions and Extensions
+
+**Status: implemented.**
+
 Topics: lambdas, function parameters/references, extension functions, higher-order functions, basic `inline`.
 
-Practice: reusable validators, transformations, filters, and retry conditions.
+Exercises:
+- [x] `keepIf` — lambda parameter.
+- [x] `transformEach` — transform lambda.
+- [x] `fieldNames` — function reference.
+- [x] `startsWith` — returning a function.
+- [x] `isValidEmail` — extension function.
+- [x] `secondOrNull` — generic extension.
+- [x] `allOf` — composing validators.
+- [x] `retryUntil` — retry condition.
+- [x] `buildText` — lambda with receiver.
+- [x] `runCatchingOr` — `inline`.
+- [x] `castOrNull` — `inline reified`.
 
 ---
 
 # Week 2 — Coroutines Deep Dive
 
+**Status: implemented.** Days 6–10, 43 exercises, 137 tests passing.
+
 ## Day 6 — Suspend Functions
+
+**Status: implemented.**
+
 Topics: `suspend`, suspension vs blocking, coroutine context.
 
-Practice: implement a delayed `loadUser(id)` using a fake data source.
-
 Key concept: **`suspend` does not mean background thread.**
+
+Exercises:
+- [x] `delayedValue` — `delay` vs blocking.
+- [x] `fetchAfterDelay` — delayed load.
+- [x] `loadUser` — load from a fake data source, throw if missing.
+- [x] `loadUserOrNull` — nullable load.
+- [x] `loadUserName` — calling suspend from suspend.
+- [x] `loadUsers` — sequential suspend calls.
+- [x] `loadUserOrFallback` — recover from failure, not from cancellation.
+- [x] `mapUser` — suspend lambda.
+- [x] `currentCoroutineName` — read coroutine context.
+- [x] `withName` — change context with `withContext`.
 
 Tests verify results, errors, and suspension using coroutine test tools.
 
 ## Day 7 — `launch` vs `async`
+
+**Status: implemented.**
+
 Topics: `launch`, `async`, `await`, `coroutineScope`, structured concurrency.
 
-Practice: load User and Orders for a dashboard sequentially, then concurrently.
-
-Tests verify both results and that independent work can execute concurrently.
+Exercises:
+- [x] `loadDashboardSequential` — User then Orders, delays add up.
+- [x] `loadDashboardConcurrent` — overlap independent work; child failure cancels siblings.
+- [x] `loadDashboardAwaitOrdersFirst` — `async` starts immediately even if awaited later.
+- [x] `loadUserAndLog` — `launch` for a fire-and-forget side effect.
+- [x] `logAll` — `coroutineScope` waits for children.
+- [x] `loadUsersConcurrent` — concurrent list, original order preserved.
+- [x] `loadFullDashboard` — sequential user load, then concurrent orders and profile.
 
 Interview targets: `launch` vs `async`, structured concurrency, child failure.
 
 ## Day 8 — Cancellation
+
+**Status: implemented.**
+
 Topics: `Job`, `cancel`, `isActive`, `ensureActive`, `CancellationException`, cooperative cancellation.
 
-Practice: build cancellable long-running search/calculation work.
+Exercises:
+- [x] `delayedValue` — `delay` is a cancellation point.
+- [x] `scanDocuments` — cancel stops remaining work.
+- [x] `searchDocuments` — cancellable search.
+- [x] `runSteps` — `ensureActive` between CPU work.
+- [x] `ticksCompleted` — `isActive` and partial results.
+- [x] `searchOrEmpty` — do not swallow `CancellationException`.
+- [x] `searchWithTimeout` — timeout returns null instead of hanging.
+- [x] `searchThenNotify` — `NonCancellable` cleanup after cancel.
+- [x] `searchInBackground` — cancel a returned `Job`.
 
 Tests verify cancellation actually prevents remaining work.
 
 ## Day 9 — Exception Handling and Supervision
+
+**Status: implemented.**
+
 Topics: exception propagation, `coroutineScope`, `supervisorScope`, `SupervisorJob`.
 
-Practice: dashboard loads User, Messages and Weather; deliberately make one child fail.
+Exercises:
+- [x] `loadUser` — exception propagates from a missing user.
+- [x] `loadHomeSequential` — User, Messages, Weather in order.
+- [x] `loadHomeStrict` — `coroutineScope` cancels siblings on failure.
+- [x] `loadHomeOrNull` — catching does not supervise; siblings still cancel.
+- [x] `loadHomeAllowWeatherFailure` — `supervisorScope` recovers weather failure.
+- [x] `loadHomeAwaitWeatherFirst` — failing `await` still cancels remaining children.
+- [x] `startIndependentLoads` — `SupervisorJob` and `CoroutineExceptionHandler`.
+- [x] `weatherDeferred` — `async` holds the exception until `await`.
 
 Tests compare normal structured-concurrency failure with supervised behaviour.
 
 ## Day 10 — Dispatchers and Threading
+
+**Status: implemented.**
+
 Topics: Main, IO, Default, `withContext`, dispatcher injection.
 
-Practice: classify network, database, CPU-heavy work, data processing and UI work.
+Exercises:
+- [x] `currentDispatcher` — dispatcher lives in coroutine context.
+- [x] `runOn` — `withContext` switches dispatcher, then restores the previous one.
+- [x] `fetchUser` — network work uses IO.
+- [x] `readCachedUser` — database reads use IO.
+- [x] `cacheUser` — database writes use IO.
+- [x] `summarizeUser` — CPU work uses Default.
+- [x] `fetchThenRender` — network then UI (`Main`).
+- [x] `loadAccount` — cache-first load.
+- [x] `loadAndRender` — full pipeline: cache/network, CPU summary, then UI.
 
 Interview targets: IO vs Default, why inject dispatchers, main-thread blocking.
 
@@ -113,6 +256,8 @@ Interview targets: IO vs Default, why inject dispatchers, main-thread blocking.
 # Week 3 — Flow Mastery
 
 This is the highest-priority week.
+
+**Status: not started.** No `week3/` source or tests yet.
 
 ## Day 11 — Flow Fundamentals
 Topics: cold Flow, `flow {}`, `emit`, `collect`, `map`, `filter`.
@@ -186,6 +331,8 @@ Fill this yourself after the experiments:
 ---
 
 # Week 4 — Senior Android Architecture
+
+**Status: not started.** No `week4/` source or tests yet.
 
 ## Day 16 — Repository Pattern
 Architecture:
@@ -288,15 +435,15 @@ Behavioural requirements:
 ```text
 src/
 ├── main/kotlin/practice/
-│   ├── week1/   # Days 1–5  language depth
-│   ├── week2/   # Days 6–10 coroutines
-│   ├── week3/   # Days 11–15 Flow
-│   └── week4/   # Days 16–20 architecture
+│   ├── week1/   # Days 1–5  language depth     — implemented
+│   ├── week2/   # Days 6–10 coroutines         — implemented
+│   ├── week3/   # Days 11–15 Flow              — not started
+│   └── week4/   # Days 16–20 architecture      — not started
 └── test/kotlin/practice/
-    ├── week1/
-    ├── week2/
-    ├── week3/
-    └── week4/
+    ├── week1/   # implemented
+    ├── week2/   # implemented
+    ├── week3/   # not started
+    └── week4/   # not started
 ```
 
 # Testing Philosophy
@@ -333,17 +480,19 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-- [ ] `let` vs `run` vs `apply` vs `also`
-- [ ] Null-safety decisions
-- [ ] List vs Sequence
-- [ ] Data/sealed type design
-- [ ] Higher-order functions
-- [ ] What `suspend` actually means
-- [ ] `launch` vs `async`
-- [ ] Structured concurrency
-- [ ] Cancellation
-- [ ] `coroutineScope` vs `supervisorScope`
-- [ ] IO vs Default
+Week 1 and Week 2 production code and tests are done. Remaining items are Week 3–4 topics, plus interview-style explanation of the implemented work.
+
+- [x] `let` vs `run` vs `apply` vs `also`
+- [x] Null-safety decisions
+- [x] List vs Sequence
+- [x] Data/sealed type design
+- [x] Higher-order functions
+- [x] What `suspend` actually means
+- [x] `launch` vs `async`
+- [x] Structured concurrency
+- [x] Cancellation
+- [x] `coroutineScope` vs `supervisorScope`
+- [x] IO vs Default
 - [ ] Cold Flow vs hot stream
 - [ ] Important Flow operators
 - [ ] StateFlow behaviour
@@ -354,7 +503,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 - [ ] UI-state ownership
 - [ ] Race-condition handling
 - [ ] Offline-first/source-of-truth design
-- [ ] Coroutine/Flow testing
+- [x] Coroutine testing (Flow testing still pending)
 - [ ] Defending architecture choices in an interview
 
 # Definition of Done
