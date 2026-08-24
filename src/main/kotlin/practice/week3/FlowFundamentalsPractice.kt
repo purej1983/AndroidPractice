@@ -3,6 +3,7 @@ package practice.week3
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -148,7 +149,7 @@ object FlowFundamentalsPractice {
      * Requirement: start from [emitEach] and use `map`. Do not loop with `emit`.
      */
     fun orderIds(orders: List<Order>): Flow<String> {
-        TODO()
+        return emitEach(orders).map { it.id }
     }
 
     /**
