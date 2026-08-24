@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**10 / 20 days implemented.** Week 1 and Week 2 production code is in place; all **225** unit tests pass. Day 11 tests are ready (`TODO()` stubs). Days 12–20 are not started.
+**11 / 20 days implemented.** Week 1, Week 2, and Day 11 production code is in place; all **258** unit tests pass. Days 12–20 are not started.
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -33,7 +33,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 8 | Cancellation | Implemented | 9 | 26 | `week2/CancellationPractice.kt` |
 | 9 | Exception Handling and Supervision | Implemented | 8 | 29 | `week2/ExceptionHandlingPractice.kt` |
 | 10 | Dispatchers and Threading | Implemented | 9 | 32 | `week2/DispatchersPractice.kt` |
-| 11 | Flow Fundamentals | Tests ready | 9 | 33 | `week3/FlowFundamentalsPractice.kt` |
+| 11 | Flow Fundamentals | Implemented | 9 | 33 | `week3/FlowFundamentalsPractice.kt` |
 | 12 | Flow Operators | Not started | — | — | — |
 | 13 | StateFlow | Not started | — | — | — |
 | 14 | SharedFlow | Not started | — | — | — |
@@ -257,24 +257,24 @@ Interview targets: IO vs Default, why inject dispatchers, main-thread blocking.
 
 This is the highest-priority week.
 
-**Status: Day 11 tests ready.** Days 12–15 are not started.
+**Status: Day 11 implemented.** Days 12–15 are not started.
 
 ## Day 11 — Flow Fundamentals
 
-**Status: tests ready.** Production functions still contain `TODO()`.
+**Status: implemented.**
 
 Topics: cold Flow, `flow {}`, `emit`, `collect`, `map`, `filter`.
 
 Exercises:
-- [ ] `emitEach` — cold `flow { }` + `emit`.
-- [ ] `emitEachDelayed` — `delay` before each emission; cancel stops the rest.
-- [ ] `collectAll` — `collect` into a list.
-- [ ] `observeOrders` — emit every store snapshot; work starts only on collect.
-- [ ] `orderIds` — `map`.
-- [ ] `paidOrders` — `filter`.
-- [ ] `paidAmounts` — `filter` then `map`.
-- [ ] `loadOrdersOnce` — one-shot `suspend` counterpart of observation.
-- [ ] `observePaidOrders` — `map` over `observeOrders`.
+- [x] `emitEach` — cold `flow { }` + `emit`.
+- [x] `emitEachDelayed` — `delay` before each emission; cancel stops the rest.
+- [x] `collectAll` — `collect` into a list.
+- [x] `observeOrders` — emit every store snapshot; work starts only on collect.
+- [x] `orderIds` — `map`.
+- [x] `paidOrders` — `filter`.
+- [x] `paidAmounts` — `filter` then `map`.
+- [x] `loadOrdersOnce` — one-shot `suspend` counterpart of observation.
+- [x] `observePaidOrders` — `map` over `observeOrders`.
 
 Tests verify emissions, order, transformations, cancellation, and cold-flow collection behaviour.
 
@@ -449,12 +449,12 @@ src/
 ├── main/kotlin/practice/
 │   ├── week1/   # Days 1–5  language depth     — implemented
 │   ├── week2/   # Days 6–10 coroutines         — implemented
-│   ├── week3/   # Days 11–15 Flow              — Day 11 tests ready
+│   ├── week3/   # Days 11–15 Flow              — Day 11 implemented
 │   └── week4/   # Days 16–20 architecture      — not started
 └── test/kotlin/practice/
     ├── week1/   # implemented
     ├── week2/   # implemented
-    ├── week3/   # Day 11 tests ready
+    ├── week3/   # Day 11 implemented
     └── week4/   # not started
 ```
 
