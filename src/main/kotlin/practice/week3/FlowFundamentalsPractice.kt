@@ -186,7 +186,7 @@ object FlowFundamentalsPractice {
      * Use [FakeOrderStore.loadOrders]. Do not return a Flow.
      */
     suspend fun loadOrdersOnce(store: FakeOrderStore): List<Order> {
-        TODO()
+        return store.loadOrders()
     }
 
     /**
