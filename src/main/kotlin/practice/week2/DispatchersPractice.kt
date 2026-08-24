@@ -295,6 +295,10 @@ object DispatchersPractice {
         userId: String,
         dispatchers: AppDispatchers
     ): AccountScreen {
-        TODO()
+        val accountScreen = loadAccount(network, database, userId, dispatchers)
+        withContext(dispatchers.main) {
+            renderer.show(accountScreen.summary.displayName)
+        }
+        return accountScreen
     }
 }
