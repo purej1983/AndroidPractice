@@ -264,7 +264,19 @@ object DispatchersPractice {
         userId: String,
         dispatchers: AppDispatchers
     ): AccountScreen {
-        TODO()
+        val cachedUser = readCachedUser(database, userId, dispatchers.io)
+        val user = if (cachedUser != null) {
+            cachedUser
+        } else {
+            val networkUser = fetchUser(network, userId, dispatchers.io)
+            cacheUser(database, networkUser, dispatchers.io)
+            networkUser
+        }
+        return AccountScreen(
+            user = user,
+            summary = summarizeUser(user, dispatchers.default),
+            fromCache = cachedUser != null
+        )
     }
 
     /**
