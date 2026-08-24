@@ -192,7 +192,9 @@ object DispatchersPractice {
         user: AccountUser,
         io: CoroutineDispatcher
     ) {
-        TODO()
+        return withContext(io) {
+            database.writeUser(user)
+        }
     }
 
     /**
