@@ -2,6 +2,7 @@ package practice.week3
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlin.time.Duration.Companion.milliseconds
@@ -160,7 +161,7 @@ object FlowFundamentalsPractice {
      * Requirement: start from [emitEach] and use `filter`.
      */
     fun paidOrders(orders: List<Order>): Flow<Order> {
-        TODO()
+        return emitEach(orders).filter { it.status == OrderStatus.PAID }
     }
 
     /**
