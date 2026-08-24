@@ -172,7 +172,7 @@ object FlowFundamentalsPractice {
      * Requirement: use `filter` and `map` on a Flow. Do not pre-filter the list.
      */
     fun paidAmounts(orders: List<Order>): Flow<Int> {
-        TODO()
+        return paidOrders(orders).map { it.amount }
     }
 
     /**
