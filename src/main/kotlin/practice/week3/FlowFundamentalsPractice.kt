@@ -198,6 +198,8 @@ object FlowFundamentalsPractice {
      * Requirement: use `map` on the Flow from [observeOrders].
      */
     fun observePaidOrders(store: FakeOrderStore): Flow<List<Order>> {
-        TODO()
+        return observeOrders(store).map { orders ->
+            orders.filter { order -> order.status == OrderStatus.PAID }
+        }
     }
 }
