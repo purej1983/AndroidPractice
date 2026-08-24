@@ -174,7 +174,9 @@ object DispatchersPractice {
         userId: String,
         io: CoroutineDispatcher
     ): AccountUser? {
-        TODO()
+        return withContext(io) {
+            database.readUser(userId)
+        }
     }
 
     /**
