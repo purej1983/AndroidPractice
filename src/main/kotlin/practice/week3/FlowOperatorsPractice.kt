@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.zip
@@ -183,7 +184,11 @@ object FlowOperatorsPractice {
      * Do not use `flatMapLatest`.
      */
     fun searchAllInOrder(queries: Flow<String>, api: FakeSearchApi): Flow<SearchResult> {
-        TODO()
+        return queries.flatMapConcat {  query ->
+            flow{
+                emit(api.search(query))
+            }
+        }
     }
 
     /**
