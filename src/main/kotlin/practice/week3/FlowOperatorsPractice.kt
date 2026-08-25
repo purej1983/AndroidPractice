@@ -5,6 +5,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -114,7 +115,7 @@ object FlowOperatorsPractice {
      * Requirement: use `distinctUntilChanged`.
      */
     fun distinctQueries(queries: Flow<String>): Flow<String> {
-        TODO()
+        return queries.distinctUntilChanged()
     }
 
     /**
