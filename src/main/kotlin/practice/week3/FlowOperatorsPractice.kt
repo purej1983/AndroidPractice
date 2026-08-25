@@ -4,7 +4,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.debounce
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Day 12 — Flow operators.
@@ -100,7 +102,7 @@ object FlowOperatorsPractice {
      * Requirement: use `debounce`. Do not implement a timer yourself.
      */
     fun debounceQueries(queries: Flow<String>, timeoutMillis: Long): Flow<String> {
-        TODO()
+        return queries.debounce(timeoutMillis.milliseconds)
     }
 
     /**
