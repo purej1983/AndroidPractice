@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**11 / 20 days implemented.** Week 1, Week 2, and Day 11 production code is in place; all **258** unit tests pass. Days 12–20 are not started.
+**11 / 20 days implemented.** Week 1, Week 2, and Day 11 production code is in place; all **258** unit tests pass. Day 12 tests are ready (`TODO()` stubs). Days 13–20 are not started.
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -34,7 +34,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 9 | Exception Handling and Supervision | Implemented | 8 | 29 | `week2/ExceptionHandlingPractice.kt` |
 | 10 | Dispatchers and Threading | Implemented | 9 | 32 | `week2/DispatchersPractice.kt` |
 | 11 | Flow Fundamentals | Implemented | 9 | 33 | `week3/FlowFundamentalsPractice.kt` |
-| 12 | Flow Operators | Not started | — | — | — |
+| 12 | Flow Operators | Tests ready | 8 | 36 | `week3/FlowOperatorsPractice.kt` |
 | 13 | StateFlow | Not started | — | — | — |
 | 14 | SharedFlow | Not started | — | — | — |
 | 15 | Channel vs SharedFlow vs StateFlow | Not started | — | — | — |
@@ -257,7 +257,7 @@ Interview targets: IO vs Default, why inject dispatchers, main-thread blocking.
 
 This is the highest-priority week.
 
-**Status: Day 11 implemented.** Days 12–15 are not started.
+**Status: Day 11 implemented. Day 12 tests ready.** Days 13–15 are not started.
 
 ## Day 11 — Flow Fundamentals
 
@@ -281,11 +281,26 @@ Tests verify emissions, order, transformations, cancellation, and cold-flow coll
 Interview targets: Flow vs suspend function, why Flow is cold, when work actually starts.
 
 ## Day 12 — Flow Operators
-Topics: `debounce`, `distinctUntilChanged`, `combine`, `zip`, `flatMapLatest`, `collectLatest`.
+
+**Status: tests ready.** Production functions are `TODO()` stubs.
+
+Topics: `debounce`, `distinctUntilChanged`, `combine`, `zip`, `flatMapLatest`, `flatMapConcat`, `collectLatest`.
 
 Practice: search while the user types `i → ip → iph → ipho → iphone`.
 
-Tests verify debounce, duplicate suppression, latest-search behaviour and cancellation.
+Exercises:
+- [ ] `debounceQueries` — `debounce`; rapid keystrokes collapse to the last query.
+- [ ] `distinctQueries` — `distinctUntilChanged`; consecutive duplicates dropped.
+- [ ] `combineQueryAndCategory` — `combine`; emit whenever either side changes.
+- [ ] `zipQueryAndPage` — `zip`; pair 1-to-1, do not skip to the latest unpaired value.
+- [ ] `searchLatest` — `flatMapLatest`; a new query cancels the in-flight search.
+- [ ] `searchAllInOrder` — `flatMapConcat`; wait for the previous search, do not cancel.
+- [ ] `collectLatestInto` — `collectLatest`; a new result cancels previous processing.
+- [ ] `searchWhileTyping` — debounce, then distinctUntilChanged, skip blanks, then `flatMapLatest`.
+
+Tests verify debounce, duplicate suppression, combine vs zip, latest-search cancellation, concat ordering, and the composed typing pipeline.
+
+Interview targets: `combine` vs `zip`, `flatMapLatest` vs `flatMapConcat`, `collectLatest` vs `collect`, why search uses debounce then distinctUntilChanged then `flatMapLatest`.
 
 ## Day 13 — StateFlow
 Topics: hot state, initial/current value, `MutableStateFlow`, `asStateFlow`, `update`, `stateIn`.
@@ -449,12 +464,12 @@ src/
 ├── main/kotlin/practice/
 │   ├── week1/   # Days 1–5  language depth     — implemented
 │   ├── week2/   # Days 6–10 coroutines         — implemented
-│   ├── week3/   # Days 11–15 Flow              — Day 11 implemented
+│   ├── week3/   # Days 11–15 Flow              — Day 11 implemented, Day 12 tests ready
 │   └── week4/   # Days 16–20 architecture      — not started
 └── test/kotlin/practice/
     ├── week1/   # implemented
     ├── week2/   # implemented
-    ├── week3/   # Day 11 implemented
+    ├── week3/   # Day 11 implemented, Day 12 tests ready
     └── week4/   # not started
 ```
 
@@ -515,7 +530,7 @@ Week 1 and Week 2 production code and tests are done. Remaining items are Week 3
 - [ ] UI-state ownership
 - [ ] Race-condition handling
 - [ ] Offline-first/source-of-truth design
-- [x] Coroutine testing (Flow testing still pending)
+- [x] Coroutine testing (Flow testing still pending for Days 13–15)
 - [ ] Defending architecture choices in an interview
 
 # Definition of Done
