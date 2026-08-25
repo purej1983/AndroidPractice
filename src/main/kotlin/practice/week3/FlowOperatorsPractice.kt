@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.zip
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -148,7 +149,7 @@ object FlowOperatorsPractice {
         queries: Flow<String>,
         pages: Flow<Int>
     ): Flow<PagedQuery> {
-        TODO()
+        return queries.zip(pages) { query, page -> PagedQuery(query, page) }
     }
 
     /**
