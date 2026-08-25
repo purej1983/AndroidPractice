@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**11 / 20 days implemented.** Week 1, Week 2, and Day 11 production code is in place; all **258** unit tests pass. Day 12 tests are ready (`TODO()` stubs). Days 13–20 are not started.
+**12 / 20 days implemented.** Week 1, Week 2, and Days 11–12 production code is in place; all **294** unit tests pass. Days 13–20 are not started.
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -34,7 +34,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 9 | Exception Handling and Supervision | Implemented | 8 | 29 | `week2/ExceptionHandlingPractice.kt` |
 | 10 | Dispatchers and Threading | Implemented | 9 | 32 | `week2/DispatchersPractice.kt` |
 | 11 | Flow Fundamentals | Implemented | 9 | 33 | `week3/FlowFundamentalsPractice.kt` |
-| 12 | Flow Operators | Tests ready | 8 | 36 | `week3/FlowOperatorsPractice.kt` |
+| 12 | Flow Operators | Implemented | 8 | 36 | `week3/FlowOperatorsPractice.kt` |
 | 13 | StateFlow | Not started | — | — | — |
 | 14 | SharedFlow | Not started | — | — | — |
 | 15 | Channel vs SharedFlow vs StateFlow | Not started | — | — | — |
@@ -257,7 +257,7 @@ Interview targets: IO vs Default, why inject dispatchers, main-thread blocking.
 
 This is the highest-priority week.
 
-**Status: Day 11 implemented. Day 12 tests ready.** Days 13–15 are not started.
+**Status: Days 11–12 implemented.** Days 13–15 are not started.
 
 ## Day 11 — Flow Fundamentals
 
@@ -282,21 +282,21 @@ Interview targets: Flow vs suspend function, why Flow is cold, when work actuall
 
 ## Day 12 — Flow Operators
 
-**Status: tests ready.** Production functions are `TODO()` stubs.
+**Status: implemented.**
 
 Topics: `debounce`, `distinctUntilChanged`, `combine`, `zip`, `flatMapLatest`, `flatMapConcat`, `collectLatest`.
 
 Practice: search while the user types `i → ip → iph → ipho → iphone`.
 
 Exercises:
-- [ ] `debounceQueries` — `debounce`; rapid keystrokes collapse to the last query.
-- [ ] `distinctQueries` — `distinctUntilChanged`; consecutive duplicates dropped.
-- [ ] `combineQueryAndCategory` — `combine`; emit whenever either side changes.
-- [ ] `zipQueryAndPage` — `zip`; pair 1-to-1, do not skip to the latest unpaired value.
-- [ ] `searchLatest` — `flatMapLatest`; a new query cancels the in-flight search.
-- [ ] `searchAllInOrder` — `flatMapConcat`; wait for the previous search, do not cancel.
-- [ ] `collectLatestInto` — `collectLatest`; a new result cancels previous processing.
-- [ ] `searchWhileTyping` — debounce, then distinctUntilChanged, skip blanks, then `flatMapLatest`.
+- [x] `debounceQueries` — `debounce`; rapid keystrokes collapse to the last query.
+- [x] `distinctQueries` — `distinctUntilChanged`; consecutive duplicates dropped.
+- [x] `combineQueryAndCategory` — `combine`; emit whenever either side changes.
+- [x] `zipQueryAndPage` — `zip`; pair 1-to-1, do not skip to the latest unpaired value.
+- [x] `searchLatest` — `flatMapLatest`; a new query cancels the in-flight search.
+- [x] `searchAllInOrder` — `flatMapConcat`; wait for the previous search, do not cancel.
+- [x] `collectLatestInto` — `collectLatest`; a new result cancels previous processing.
+- [x] `searchWhileTyping` — debounce, then distinctUntilChanged, skip blanks, then `flatMapLatest`.
 
 Tests verify debounce, duplicate suppression, combine vs zip, latest-search cancellation, concat ordering, and the composed typing pipeline.
 
@@ -464,12 +464,12 @@ src/
 ├── main/kotlin/practice/
 │   ├── week1/   # Days 1–5  language depth     — implemented
 │   ├── week2/   # Days 6–10 coroutines         — implemented
-│   ├── week3/   # Days 11–15 Flow              — Day 11 implemented, Day 12 tests ready
+│   ├── week3/   # Days 11–15 Flow              — Days 11–12 implemented
 │   └── week4/   # Days 16–20 architecture      — not started
 └── test/kotlin/practice/
     ├── week1/   # implemented
     ├── week2/   # implemented
-    ├── week3/   # Day 11 implemented, Day 12 tests ready
+    ├── week3/   # Days 11–12 implemented
     └── week4/   # not started
 ```
 
@@ -507,7 +507,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-Week 1 and Week 2 production code and tests are done. Remaining items are Week 3–4 topics, plus interview-style explanation of the implemented work.
+Week 1, Week 2, and Days 11–12 production code and tests are done. Remaining items are Days 13–20, plus interview-style explanation of the implemented work.
 
 - [x] `let` vs `run` vs `apply` vs `also`
 - [x] Null-safety decisions
@@ -521,7 +521,7 @@ Week 1 and Week 2 production code and tests are done. Remaining items are Week 3
 - [x] `coroutineScope` vs `supervisorScope`
 - [x] IO vs Default
 - [ ] Cold Flow vs hot stream
-- [ ] Important Flow operators
+- [x] Important Flow operators
 - [ ] StateFlow behaviour
 - [ ] SharedFlow/replay behaviour
 - [ ] Channel behaviour
