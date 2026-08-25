@@ -593,6 +593,7 @@ class FlowOperatorsPracticeTest {
         val queries = timedFlow(
             0L to "iphone",
             1_000L to "",
+            2_000L to " ",
             lingerMillis = 400
         )
 
