@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -232,6 +233,12 @@ object FlowOperatorsPractice {
         api: FakeSearchApi,
         debounceMillis: Long
     ): Flow<SearchResult> {
-        TODO()
+        return queries
+            .debounce(debounceMillis.milliseconds)
+            .distinctUntilChanged()
+            .filter { it.isNotBlank() }
+            .flatMapLatest { query -> flow {
+                emit(api.search(query))
+            } }
     }
 }
