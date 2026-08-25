@@ -138,7 +138,7 @@ object FlowOperatorsPractice {
         queries: Flow<String>,
         categories: Flow<String>
     ): Flow<SearchForm> {
-        return combine(queries, categories) { query, categories -> SearchForm(query, categories) }
+        return combine(queries, categories) { query, category -> SearchForm(query, category) }
     }
 
     /**
