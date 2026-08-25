@@ -4,6 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlin.coroutines.cancellation.CancellationException
@@ -131,7 +132,7 @@ object FlowOperatorsPractice {
         queries: Flow<String>,
         categories: Flow<String>
     ): Flow<SearchForm> {
-        TODO()
+        return combine(queries, categories) { query, categories -> SearchForm(query, categories) }
     }
 
     /**
