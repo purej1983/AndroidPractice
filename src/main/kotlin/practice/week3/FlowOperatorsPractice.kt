@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.zip
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.milliseconds
@@ -162,7 +164,11 @@ object FlowOperatorsPractice {
      * Do not use `flatMapConcat` or `flatMapMerge`.
      */
     fun searchLatest(queries: Flow<String>, api: FakeSearchApi): Flow<SearchResult> {
-        TODO()
+        return queries.flatMapLatest {  query ->
+            flow{
+                emit(api.search(query))
+            }
+        }
     }
 
     /**
