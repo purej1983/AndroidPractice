@@ -469,7 +469,8 @@ class StateFlowPracticeTest {
 
         val job1 = launch { state.collect { first += it } }
         val job2 = launch { state.collect { second += it } }
-        testScheduler.advanceUntilIdle()
+        testScheduler.advanceTimeBy(1_000)
+        testScheduler.runCurrent()
 
         assertEquals(1, feed.collectCount)
         assertEquals(listOf(0), feed.readIndexes)
@@ -488,7 +489,7 @@ class StateFlowPracticeTest {
             initial = emptyList()
         )
 
-        testScheduler.advanceUntilIdle()
+        testScheduler.runCurrent()
         assertEquals(listOf(alice, bob), state.value)
 
         val late = mutableListOf<List<User>>()
