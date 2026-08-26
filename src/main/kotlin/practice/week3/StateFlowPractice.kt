@@ -167,7 +167,7 @@ object StateFlowPractice {
      * Requirement: use `update`.
      */
     fun markError(state: MutableStateFlow<UiState>, message: String) {
-        TODO()
+        state.update { it.copy(loading = false, error = message) }
     }
 
     /**
