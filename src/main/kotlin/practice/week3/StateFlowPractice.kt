@@ -131,7 +131,7 @@ object StateFlowPractice {
      * Requirement: use `asStateFlow`.
      */
     fun <T> readOnly(mutable: MutableStateFlow<T>): StateFlow<T> {
-        TODO()
+        return mutable.asStateFlow()
     }
 
     /**
