@@ -217,14 +217,20 @@ class StateFlowPracticeTest {
     @Test
     fun `refreshUsers moves initial to loading then success`() = runTest {
         val state = MutableStateFlow(UiState())
-        val api = FakeUserApi(users = listOf(alice, bob))
+        val api = FakeUserApi(users = listOf(alice, bob), delayMillis = 1_000)
         val emitted = mutableListOf<UiState>()
 
-        val job = launch { state.collect { emitted += it } }
-        testScheduler.runCurrent()
-        StateFlowPractice.refreshUsers(state, api)
+        val collector = launch { state.collect { emitted += it } }
         testScheduler.runCurrent()
 
+        val refresh = launch { StateFlowPractice.refreshUsers(state, api) }
+        testScheduler.runCurrent()
+        assertEquals(
+            listOf(UiState(), UiState(loading = true)),
+            emitted
+        )
+
+        refresh.join()
         assertEquals(
             listOf(
                 UiState(),
@@ -235,7 +241,7 @@ class StateFlowPracticeTest {
         )
         assertEquals(1, api.startedLoads)
         assertEquals(1, api.completedLoads)
-        job.cancelAndJoin()
+        collector.cancelAndJoin()
     }
 
     @Test

@@ -184,7 +184,15 @@ object StateFlowPractice {
      * Requirement: use [markLoading], [markSuccess], and [markError].
      */
     suspend fun refreshUsers(state: MutableStateFlow<UiState>, api: FakeUserApi) {
-        TODO()
+        markLoading(state)
+        try {
+            val users = api.loadUsers()
+            markSuccess(state, users)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Throwable) {
+            markError(state, error.message ?: "Unknown error")
+        }
     }
 
     /**
