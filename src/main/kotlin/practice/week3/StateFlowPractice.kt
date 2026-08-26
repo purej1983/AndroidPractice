@@ -230,6 +230,6 @@ object StateFlowPractice {
         scope: CoroutineScope,
         initial: T
     ): StateFlow<T> {
-        TODO()
+        return upstream.stateIn(scope, SharingStarted.Lazily, initial)
     }
 }
