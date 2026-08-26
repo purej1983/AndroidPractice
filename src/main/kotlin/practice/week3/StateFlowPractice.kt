@@ -144,7 +144,7 @@ object StateFlowPractice {
      * Requirement: use `update`. Do not read `.value` and then assign.
      */
     fun markLoading(state: MutableStateFlow<UiState>) {
-        return state.update { it.copy(loading = true, error = null) }
+        state.update { it.copy(loading = true, error = null) }
     }
 
     /**
@@ -155,7 +155,7 @@ object StateFlowPractice {
      * Requirement: use `update`.
      */
     fun markSuccess(state: MutableStateFlow<UiState>, users: List<User>) {
-        TODO()
+        state.update { it.copy(loading = false, error = null, users = users) }
     }
 
     /**
