@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.update
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -143,7 +144,7 @@ object StateFlowPractice {
      * Requirement: use `update`. Do not read `.value` and then assign.
      */
     fun markLoading(state: MutableStateFlow<UiState>) {
-        TODO()
+        return state.update { it.copy(loading = true, error = null) }
     }
 
     /**
