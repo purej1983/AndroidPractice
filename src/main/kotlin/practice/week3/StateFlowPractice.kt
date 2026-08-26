@@ -5,6 +5,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.milliseconds
@@ -117,7 +118,7 @@ object StateFlowPractice {
      * Do not use `stateIn`.
      */
     fun <T> stateOf(initial: T): StateFlow<T> {
-        TODO()
+        return MutableStateFlow(initial).asStateFlow()
     }
 
     /**
