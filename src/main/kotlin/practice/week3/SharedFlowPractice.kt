@@ -86,14 +86,15 @@ class FakeNoteFeed(
  * capacity. Do not use StateFlow.
  */
 class EventNotifier {
-    val events: SharedFlow<UiEvent> = TODO()
+    private val mutableEvents = MutableSharedFlow<UiEvent>()
+    val events: SharedFlow<UiEvent> = mutableEvents.asSharedFlow()
 
     suspend fun notifySaved() {
-        TODO()
+        mutableEvents.emit(UiEvent.Saved)
     }
 
     suspend fun notifyError(message: String) {
-        TODO()
+        mutableEvents.emit(UiEvent.ShowError(message))
     }
 }
 
