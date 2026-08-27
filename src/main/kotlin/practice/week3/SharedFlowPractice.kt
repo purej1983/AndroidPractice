@@ -156,7 +156,7 @@ object SharedFlowPractice {
      * Do not set `replay` to 1.
      */
     fun <T> buffered(extraBufferCapacity: Int): MutableSharedFlow<T> {
-        TODO()
+        return MutableSharedFlow(replay = 0, extraBufferCapacity = extraBufferCapacity)
     }
 
     /**
