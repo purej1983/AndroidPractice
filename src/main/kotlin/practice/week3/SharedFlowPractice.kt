@@ -109,7 +109,7 @@ object SharedFlowPractice {
      * Do not set `extraBufferCapacity`. Do not use StateFlow.
      */
     fun <T> noReplay(): MutableSharedFlow<T> {
-        TODO()
+        return MutableSharedFlow(replay =0)
     }
 
     /**
