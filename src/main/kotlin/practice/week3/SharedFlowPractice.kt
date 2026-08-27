@@ -5,8 +5,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -189,7 +191,7 @@ object SharedFlowPractice {
         scope: CoroutineScope,
         replay: Int
     ): SharedFlow<T> {
-        TODO()
+        return upstream.shareIn(scope, SharingStarted.Eagerly, replay)
     }
 
     /**
