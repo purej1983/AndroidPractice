@@ -169,7 +169,7 @@ object SharedFlowPractice {
      * Requirement: use `emit`. Do not use `tryEmit`.
      */
     suspend fun <T> emitEvent(events: MutableSharedFlow<T>, value: T) {
-        TODO()
+        events.emit(value)
     }
 
     /**
