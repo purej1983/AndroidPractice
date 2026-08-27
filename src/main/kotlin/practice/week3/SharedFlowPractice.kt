@@ -138,7 +138,7 @@ object SharedFlowPractice {
      * Do not use StateFlow.
      */
     fun <T> replayLast(): MutableSharedFlow<T> {
-        TODO()
+        return MutableSharedFlow(replay = 1)
     }
 
     /**
