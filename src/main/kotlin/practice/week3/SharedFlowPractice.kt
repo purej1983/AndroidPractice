@@ -209,6 +209,6 @@ object SharedFlowPractice {
         scope: CoroutineScope,
         replay: Int
     ): SharedFlow<T> {
-        TODO()
+        return upstream.shareIn(scope, SharingStarted.Lazily, replay)
     }
 }
