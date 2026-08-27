@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**13 / 20 days implemented.** Week 1, Week 2, and Days 11–13 production code is in place; all **328** unit tests pass. Day 14 tests are ready (`TODO()` stubs). Days 15–20 are not started.
+**14 / 20 days implemented.** Week 1, Week 2, and Days 11–14 production code is in place; all **366** unit tests pass. Days 15–20 are not started.
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -36,7 +36,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 11 | Flow Fundamentals | Implemented | 9 | 33 | `week3/FlowFundamentalsPractice.kt` |
 | 12 | Flow Operators | Implemented | 8 | 36 | `week3/FlowOperatorsPractice.kt` |
 | 13 | StateFlow | Implemented | 8 | 34 | `week3/StateFlowPractice.kt` |
-| 14 | SharedFlow | Tests ready | 8 | 38 | `week3/SharedFlowPractice.kt` |
+| 14 | SharedFlow | Implemented | 8 | 38 | `week3/SharedFlowPractice.kt` |
 | 15 | Channel vs SharedFlow vs StateFlow | Not started | — | — | — |
 | 16 | Repository Pattern | Not started | — | — | — |
 | 17 | State Management | Not started | — | — | — |
@@ -257,7 +257,7 @@ Interview targets: IO vs Default, why inject dispatchers, main-thread blocking.
 
 This is the highest-priority week.
 
-**Status: Days 11–13 implemented. Day 14 tests ready.** Day 15 is not started.
+**Status: Days 11–14 implemented.** Day 15 is not started.
 
 ## Day 11 — Flow Fundamentals
 
@@ -336,30 +336,23 @@ Interview targets: why StateFlow requires an initial value, why it fits UI state
 
 ## Day 14 — SharedFlow
 
-**Status: tests ready.** Production functions are `TODO()` stubs.
+**Status: implemented.**
 
 Topics: broadcast streams, `replay`, buffering, multiple collectors, `shareIn`.
 
 Practice one-time-style application events such as Saved and ShowError.
 
 Exercises:
-- [ ] `noReplay` — `MutableSharedFlow(replay = 0)`; emission before a collector is dropped.
-- [ ] `readOnly` — expose `SharedFlow`, not `MutableSharedFlow`.
-- [ ] `replayLast` — `replay = 1`; late collector gets the last event. Equal values are not conflated.
-- [ ] `buffered` — `extraBufferCapacity` helps a slow collector, not a missing one.
-- [ ] `emitEvent` — `emit`; returns immediately with no collector; suspends if a collector is busy.
-- [ ] `EventNotifier` — Saved / ShowError one-time events; late collector must not replay them.
-- [ ] `shareEagerly` — `shareIn(SharingStarted.Eagerly)`; work starts with no collector.
-- [ ] `shareLazily` — `shareIn(SharingStarted.Lazily)`; work starts on the first collector.
+- [x] `noReplay` — `MutableSharedFlow(replay = 0)`; emission before a collector is dropped.
+- [x] `readOnly` — expose `SharedFlow`, not `MutableSharedFlow`.
+- [x] `replayLast` — `replay = 1`; late collector gets the last event. Equal values are not conflated.
+- [x] `buffered` — `extraBufferCapacity` helps a slow collector, not a missing one.
+- [x] `emitEvent` — `emit`; returns immediately with no collector; suspends if a collector is busy.
+- [x] `EventNotifier` — Saved / ShowError one-time events; late collector must not replay them.
+- [x] `shareEagerly` — `shareIn(SharingStarted.Eagerly)`; work starts with no collector.
+- [x] `shareLazily` — `shareIn(SharingStarted.Lazily)`; work starts on the first collector.
 
-Tests investigate:
-- `replay = 0`
-- `replay = 1`
-- emission before/after collector
-- late collector
-- multiple collectors
-- extra buffer vs replay
-- Eagerly vs Lazily sharing
+Tests verify replay 0 vs replay 1, emission before/after a collector, late collectors, broadcast to multiple collectors, extra buffer vs replay, and Eagerly vs Lazily sharing.
 
 Interview targets: why SharedFlow has no initial value, why `replay = 0` fits one-time UI events, extra buffer vs replay, SharedFlow vs StateFlow (no conflation, no `.value`).
 
@@ -494,12 +487,12 @@ src/
 ├── main/kotlin/practice/
 │   ├── week1/   # Days 1–5  language depth     — implemented
 │   ├── week2/   # Days 6–10 coroutines         — implemented
-│   ├── week3/   # Days 11–15 Flow              — Days 11–13 implemented, Day 14 tests ready
+│   ├── week3/   # Days 11–15 Flow              — Days 11–14 implemented
 │   └── week4/   # Days 16–20 architecture      — not started
 └── test/kotlin/practice/
     ├── week1/   # implemented
     ├── week2/   # implemented
-    ├── week3/   # Days 11–13 implemented, Day 14 tests ready
+    ├── week3/   # Days 11–14 implemented
     └── week4/   # not started
 ```
 
@@ -537,7 +530,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-Week 1, Week 2, and Days 11–13 production code and tests are done. Day 14 tests are ready. Remaining implementation is Days 14–20, plus interview-style explanation of the implemented work.
+Week 1, Week 2, and Days 11–14 production code and tests are done. Remaining items are Days 15–20, plus interview-style explanation of the implemented work.
 
 - [x] `let` vs `run` vs `apply` vs `also`
 - [x] Null-safety decisions
@@ -553,7 +546,7 @@ Week 1, Week 2, and Days 11–13 production code and tests are done. Day 14 test
 - [ ] Cold Flow vs hot stream
 - [x] Important Flow operators
 - [x] StateFlow behaviour
-- [ ] SharedFlow/replay behaviour
+- [x] SharedFlow/replay behaviour
 - [ ] Channel behaviour
 - [ ] StateFlow vs SharedFlow vs Channel
 - [ ] Repository responsibilities
