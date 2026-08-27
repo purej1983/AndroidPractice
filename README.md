@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**12 / 20 days implemented.** Week 1, Week 2, and Days 11–12 production code is in place; all **294** unit tests pass. Days 13–20 are not started.
+**13 / 20 days implemented.** Week 1, Week 2, and Days 11–13 production code is in place; all **328** unit tests pass. Days 14–20 are not started.
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -35,7 +35,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 10 | Dispatchers and Threading | Implemented | 9 | 32 | `week2/DispatchersPractice.kt` |
 | 11 | Flow Fundamentals | Implemented | 9 | 33 | `week3/FlowFundamentalsPractice.kt` |
 | 12 | Flow Operators | Implemented | 8 | 36 | `week3/FlowOperatorsPractice.kt` |
-| 13 | StateFlow | Not started | — | — | — |
+| 13 | StateFlow | Implemented | 8 | 34 | `week3/StateFlowPractice.kt` |
 | 14 | SharedFlow | Not started | — | — | — |
 | 15 | Channel vs SharedFlow vs StateFlow | Not started | — | — | — |
 | 16 | Repository Pattern | Not started | — | — | — |
@@ -257,7 +257,7 @@ Interview targets: IO vs Default, why inject dispatchers, main-thread blocking.
 
 This is the highest-priority week.
 
-**Status: Days 11–12 implemented.** Days 13–15 are not started.
+**Status: Days 11–13 implemented.** Days 14–15 are not started.
 
 ## Day 11 — Flow Fundamentals
 
@@ -303,6 +303,9 @@ Tests verify debounce, duplicate suppression, combine vs zip, latest-search canc
 Interview targets: `combine` vs `zip`, `flatMapLatest` vs `flatMapConcat`, `collectLatest` vs `collect`, why search uses debounce then distinctUntilChanged then `flatMapLatest`.
 
 ## Day 13 — StateFlow
+
+**Status: implemented.**
+
 Topics: hot state, initial/current value, `MutableStateFlow`, `asStateFlow`, `update`, `stateIn`.
 
 Practice:
@@ -317,7 +320,17 @@ data class UiState(
 
 Implement Initial → Loading → Success/Error.
 
-Tests verify state transitions and that a new collector can receive current state.
+Exercises:
+- [x] `stateOf` — `MutableStateFlow` + `asStateFlow`; current value is available immediately.
+- [x] `readOnly` — expose `StateFlow`, not `MutableStateFlow`.
+- [x] `markLoading` — `update`; loading, keep users, clear error.
+- [x] `markSuccess` — `update`; users, not loading, no error. Equal consecutive states are conflated.
+- [x] `markError` — `update`; error message, keep users.
+- [x] `refreshUsers` — Initial → Loading → Success/Error; cancellation is not a load error.
+- [x] `shareEagerly` — `stateIn(SharingStarted.Eagerly)`; work starts with no collector.
+- [x] `shareLazily` — `stateIn(SharingStarted.Lazily)`; work starts on the first collector.
+
+Tests verify state transitions, that a new collector receives current state (not history), conflation, and Eagerly vs Lazily sharing.
 
 Interview targets: why StateFlow requires an initial value, why it fits UI state, `stateIn()`.
 
@@ -464,12 +477,12 @@ src/
 ├── main/kotlin/practice/
 │   ├── week1/   # Days 1–5  language depth     — implemented
 │   ├── week2/   # Days 6–10 coroutines         — implemented
-│   ├── week3/   # Days 11–15 Flow              — Days 11–12 implemented
+│   ├── week3/   # Days 11–15 Flow              — Days 11–13 implemented
 │   └── week4/   # Days 16–20 architecture      — not started
 └── test/kotlin/practice/
     ├── week1/   # implemented
     ├── week2/   # implemented
-    ├── week3/   # Days 11–12 implemented
+    ├── week3/   # Days 11–13 implemented
     └── week4/   # not started
 ```
 
@@ -507,7 +520,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-Week 1, Week 2, and Days 11–12 production code and tests are done. Remaining items are Days 13–20, plus interview-style explanation of the implemented work.
+Week 1, Week 2, and Days 11–13 production code and tests are done. Remaining items are Days 14–20, plus interview-style explanation of the implemented work.
 
 - [x] `let` vs `run` vs `apply` vs `also`
 - [x] Null-safety decisions
@@ -522,7 +535,7 @@ Week 1, Week 2, and Days 11–12 production code and tests are done. Remaining i
 - [x] IO vs Default
 - [ ] Cold Flow vs hot stream
 - [x] Important Flow operators
-- [ ] StateFlow behaviour
+- [x] StateFlow behaviour
 - [ ] SharedFlow/replay behaviour
 - [ ] Channel behaviour
 - [ ] StateFlow vs SharedFlow vs Channel
@@ -530,7 +543,7 @@ Week 1, Week 2, and Days 11–12 production code and tests are done. Remaining i
 - [ ] UI-state ownership
 - [ ] Race-condition handling
 - [ ] Offline-first/source-of-truth design
-- [x] Coroutine testing (Flow testing still pending for Days 13–15)
+- [x] Coroutine testing (Flow testing still pending for Days 14–15)
 - [ ] Defending architecture choices in an interview
 
 # Definition of Done
