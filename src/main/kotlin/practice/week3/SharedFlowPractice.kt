@@ -88,7 +88,7 @@ class FakeNoteFeed(
  * capacity. Do not use StateFlow.
  */
 class EventNotifier {
-    private val mutableEvents = MutableSharedFlow<UiEvent>()
+    private val mutableEvents = MutableSharedFlow<UiEvent>(replay = 0)
     val events: SharedFlow<UiEvent> = mutableEvents.asSharedFlow()
 
     suspend fun notifySaved() {
@@ -113,7 +113,7 @@ object SharedFlowPractice {
      * Do not set `extraBufferCapacity`. Do not use StateFlow.
      */
     fun <T> noReplay(): MutableSharedFlow<T> {
-        return MutableSharedFlow(replay =0)
+        return MutableSharedFlow(replay = 0)
     }
 
     /**
@@ -126,7 +126,7 @@ object SharedFlowPractice {
      * Requirement: use `asSharedFlow`.
      */
     fun <T> readOnly(mutable: MutableSharedFlow<T>): SharedFlow<T> {
-        return  mutable.asSharedFlow()
+        return mutable.asSharedFlow()
     }
 
     /**
