@@ -176,7 +176,7 @@ object ChannelVsFlowPractice {
      * Do not use StateFlow.
      */
     fun <T> conflated(): Channel<T> {
-        TODO()
+        return Channel(Channel.CONFLATED)
     }
 
     /**
