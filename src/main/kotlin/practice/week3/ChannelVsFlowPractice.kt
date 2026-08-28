@@ -104,10 +104,11 @@ class ScreenStore(initial: BoardState = BoardState()) {
  * capacity. Do not use StateFlow or Channel.
  */
 class ToastBus {
-    val toasts: SharedFlow<Toast> = TODO()
+    val mToasts = MutableSharedFlow<Toast>()
+    val toasts: SharedFlow<Toast> = mToasts.asSharedFlow()
 
     suspend fun show(text: String) {
-        TODO()
+        mToasts.emit(Toast.Shown(text))
     }
 }
 
