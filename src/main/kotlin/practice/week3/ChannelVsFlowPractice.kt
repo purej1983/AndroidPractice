@@ -4,6 +4,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
  * Day 15 — Channel vs SharedFlow vs StateFlow.
@@ -191,15 +192,15 @@ object ChannelVsFlowPractice {
      * Do not use `consumeAsFlow` (that allows only one collector).
      */
     suspend fun <T> sendTo(channel: Channel<T>, value: T) {
-        TODO()
+        channel.send(value)
     }
 
     suspend fun <T> receiveFrom(channel: Channel<T>): T {
-        TODO()
+        return channel.receive()
     }
 
     fun <T> asFlow(channel: Channel<T>): Flow<T> {
-        TODO()
+        return channel.receiveAsFlow()
     }
 
     /**
