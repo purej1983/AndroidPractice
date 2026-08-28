@@ -2,8 +2,12 @@ package practice.week3
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
@@ -214,7 +218,14 @@ object ChannelVsFlowPractice {
      * Requirement: use `MutableStateFlow`. Do not use SharedFlow or Channel.
      */
     fun <T> stateStream(initial: T): MessageStream<T> {
-        TODO()
+        return object : MessageStream<T> {
+            private val state = MutableStateFlow(initial)
+            override suspend fun emit(value: T) {
+                state.value = value
+            }
+            override fun observe(): Flow<T> = state.asStateFlow()
+            override fun latestOrNull(): T? = state.value
+        }
     }
 
     /**
@@ -228,7 +239,14 @@ object ChannelVsFlowPractice {
      * Do not use StateFlow or Channel.
      */
     fun <T> sharedStream(replay: Int): MessageStream<T> {
-        TODO()
+        return object : MessageStream<T> {
+            private val events = MutableSharedFlow<T>(replay = replay)
+            override suspend fun emit(value: T) {
+                events.emit(value)
+            }
+            override fun observe(): Flow<T> = events.asSharedFlow()
+            override fun latestOrNull(): T? = events.replayCache.lastOrNull()
+        }
     }
 
     /**
@@ -241,6 +259,13 @@ object ChannelVsFlowPractice {
      * Do not use StateFlow or SharedFlow.
      */
     fun <T> channelStream(): MessageStream<T> {
-        TODO()
+        return object : MessageStream<T> {
+            private val channel = Channel<T>(Channel.UNLIMITED)
+            override suspend fun emit(value: T) {
+                channel.send(value)
+            }
+            override fun observe(): Flow<T> = channel.receiveAsFlow()
+            override fun latestOrNull(): T? = null
+        }
     }
 }
