@@ -77,14 +77,15 @@ interface MessageStream<T> {
  * `asStateFlow`. Update with `update`. Do not use SharedFlow or Channel.
  */
 class ScreenStore(initial: BoardState = BoardState()) {
-    val state: StateFlow<BoardState> = TODO()
+    val mState = MutableStateFlow(initial)
+    val state: StateFlow<BoardState> = mState.asStateFlow()
 
     fun setTitle(title: String) {
-        TODO()
+        mState.value = mState.value.copy(title = title)
     }
 
     fun setTickets(tickets: List<Ticket>) {
-        TODO()
+        mState.value = mState.value.copy(tickets = tickets)
     }
 }
 
