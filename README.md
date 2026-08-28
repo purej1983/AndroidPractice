@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**14 / 20 days implemented.** Week 1, Week 2, and Days 11–14 production code is in place; all **366** unit tests pass. Days 15–20 are not started.
+**14 / 20 days implemented.** Week 1, Week 2, and Days 11–14 production code is in place; all **366** unit tests pass. Day 15 tests are ready (`TODO()` stubs). Days 16–20 are not started.
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -37,7 +37,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 12 | Flow Operators | Implemented | 8 | 36 | `week3/FlowOperatorsPractice.kt` |
 | 13 | StateFlow | Implemented | 8 | 34 | `week3/StateFlowPractice.kt` |
 | 14 | SharedFlow | Implemented | 8 | 38 | `week3/SharedFlowPractice.kt` |
-| 15 | Channel vs SharedFlow vs StateFlow | Not started | — | — | — |
+| 15 | Channel vs SharedFlow vs StateFlow | Tests ready | 8 | 50 | `week3/ChannelVsFlowPractice.kt` |
 | 16 | Repository Pattern | Not started | — | — | — |
 | 17 | State Management | Not started | — | — | — |
 | 18 | Race Conditions and Search | Not started | — | — | — |
@@ -257,7 +257,7 @@ Interview targets: IO vs Default, why inject dispatchers, main-thread blocking.
 
 This is the highest-priority week.
 
-**Status: Days 11–14 implemented.** Day 15 is not started.
+**Status: Days 11–14 implemented. Day 15 tests ready.**
 
 ## Day 11 — Flow Fundamentals
 
@@ -357,6 +357,9 @@ Tests verify replay 0 vs replay 1, emission before/after a collector, late colle
 Interview targets: why SharedFlow has no initial value, why `replay = 0` fits one-time UI events, extra buffer vs replay, SharedFlow vs StateFlow (no conflation, no `.value`).
 
 ## Day 15 — Channel vs SharedFlow vs StateFlow
+
+**Status: tests ready.** Production bodies are `TODO()`.
+
 Topics: `Channel`, `send`, `receive`, `receiveAsFlow`, queue vs broadcast vs state semantics.
 
 Run the same experiments against StateFlow, SharedFlow and Channel:
@@ -366,6 +369,18 @@ Run the same experiments against StateFlow, SharedFlow and Channel:
 - collector reconnects
 - many rapid values
 - latest/current-value requirement
+
+Exercises:
+- [ ] `rendezvous` — `Channel()`; `trySend` without a receiver fails; `send` waits.
+- [ ] `unlimited` — `Channel.UNLIMITED`; values sent before a receiver stay in order.
+- [ ] `conflated` — `Channel.CONFLATED`; two sends before receive keep only the last. Not StateFlow.
+- [ ] `sendTo` / `receiveFrom` / `asFlow` — `send`, `receive`, `receiveAsFlow`. Two collectors split work; close completes the Flow.
+- [ ] `stateStream` / `sharedStream` / `channelStream` — the same experiments on all three.
+- [ ] `ScreenStore` — UI state with `.value`, rotation, conflation (`StateFlow`).
+- [ ] `ToastBus` — one-time toasts, broadcast, no replay (`SharedFlow`).
+- [ ] `JobQueue` — each ticket processed once (`Channel`).
+
+Interview targets: Channel vs SharedFlow vs StateFlow, why Channel is a queue not a broadcast, when conflated Channel is still the wrong UI-state choice, `receiveAsFlow` vs `consumeAsFlow`.
 
 Fill this yourself after the experiments:
 
@@ -487,12 +502,12 @@ src/
 ├── main/kotlin/practice/
 │   ├── week1/   # Days 1–5  language depth     — implemented
 │   ├── week2/   # Days 6–10 coroutines         — implemented
-│   ├── week3/   # Days 11–15 Flow              — Days 11–14 implemented
+│   ├── week3/   # Days 11–15 Flow              — Days 11–14 implemented, Day 15 tests ready
 │   └── week4/   # Days 16–20 architecture      — not started
 └── test/kotlin/practice/
     ├── week1/   # implemented
     ├── week2/   # implemented
-    ├── week3/   # Days 11–14 implemented
+    ├── week3/   # Days 11–14 implemented, Day 15 tests ready
     └── week4/   # not started
 ```
 
@@ -530,7 +545,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-Week 1, Week 2, and Days 11–14 production code and tests are done. Remaining items are Days 15–20, plus interview-style explanation of the implemented work.
+Week 1, Week 2, and Days 11–14 production code and tests are done. Day 15 tests are ready (`TODO()` stubs). Remaining items are Days 16–20, plus interview-style explanation of the implemented work.
 
 - [x] `let` vs `run` vs `apply` vs `also`
 - [x] Null-safety decisions
@@ -553,7 +568,7 @@ Week 1, Week 2, and Days 11–14 production code and tests are done. Remaining i
 - [ ] UI-state ownership
 - [ ] Race-condition handling
 - [ ] Offline-first/source-of-truth design
-- [x] Coroutine testing (Flow testing still pending for Day 15)
+- [x] Coroutine testing (Day 15 Flow/Channel comparison tests are ready)
 - [ ] Defending architecture choices in an interview
 
 # Definition of Done
