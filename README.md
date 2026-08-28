@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**14 / 20 days implemented.** Week 1, Week 2, and Days 11–14 production code is in place; all **366** unit tests pass. Day 15 tests are ready (`TODO()` stubs). Days 16–20 are not started.
+**15 / 20 days implemented.** Week 1, Week 2, and Week 3 production code is in place; all **416** unit tests pass. Days 16–20 are not started.
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -37,7 +37,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 12 | Flow Operators | Implemented | 8 | 36 | `week3/FlowOperatorsPractice.kt` |
 | 13 | StateFlow | Implemented | 8 | 34 | `week3/StateFlowPractice.kt` |
 | 14 | SharedFlow | Implemented | 8 | 38 | `week3/SharedFlowPractice.kt` |
-| 15 | Channel vs SharedFlow vs StateFlow | Tests ready | 8 | 50 | `week3/ChannelVsFlowPractice.kt` |
+| 15 | Channel vs SharedFlow vs StateFlow | Implemented | 8 | 50 | `week3/ChannelVsFlowPractice.kt` |
 | 16 | Repository Pattern | Not started | — | — | — |
 | 17 | State Management | Not started | — | — | — |
 | 18 | Race Conditions and Search | Not started | — | — | — |
@@ -257,7 +257,7 @@ Interview targets: IO vs Default, why inject dispatchers, main-thread blocking.
 
 This is the highest-priority week.
 
-**Status: Days 11–14 implemented. Day 15 tests ready.**
+**Status: implemented.** Days 11–15, 41 exercises, 191 tests passing.
 
 ## Day 11 — Flow Fundamentals
 
@@ -358,7 +358,7 @@ Interview targets: why SharedFlow has no initial value, why `replay = 0` fits on
 
 ## Day 15 — Channel vs SharedFlow vs StateFlow
 
-**Status: tests ready.** Production bodies are `TODO()`.
+**Status: implemented.**
 
 Topics: `Channel`, `send`, `receive`, `receiveAsFlow`, queue vs broadcast vs state semantics.
 
@@ -371,27 +371,27 @@ Run the same experiments against StateFlow, SharedFlow and Channel:
 - latest/current-value requirement
 
 Exercises:
-- [ ] `rendezvous` — `Channel()`; `trySend` without a receiver fails; `send` waits.
-- [ ] `unlimited` — `Channel.UNLIMITED`; values sent before a receiver stay in order.
-- [ ] `conflated` — `Channel.CONFLATED`; two sends before receive keep only the last. Not StateFlow.
-- [ ] `sendTo` / `receiveFrom` / `asFlow` — `send`, `receive`, `receiveAsFlow`. Two collectors split work; close completes the Flow.
-- [ ] `stateStream` / `sharedStream` / `channelStream` — the same experiments on all three.
-- [ ] `ScreenStore` — UI state with `.value`, rotation, conflation (`StateFlow`).
-- [ ] `ToastBus` — one-time toasts, broadcast, no replay (`SharedFlow`).
-- [ ] `JobQueue` — each ticket processed once (`Channel`).
+- [x] `rendezvous` — `Channel()`; `trySend` without a receiver fails; `send` waits.
+- [x] `unlimited` — `Channel.UNLIMITED`; values sent before a receiver stay in order.
+- [x] `conflated` — `Channel.CONFLATED`; two sends before receive keep only the last. Not StateFlow.
+- [x] `sendTo` / `receiveFrom` / `asFlow` — `send`, `receive`, `receiveAsFlow`. Two collectors split work; close completes the Flow.
+- [x] `stateStream` / `sharedStream` / `channelStream` — the same experiments on all three.
+- [x] `ScreenStore` — UI state with `.value`, rotation, conflation (`StateFlow`).
+- [x] `ToastBus` — one-time toasts, broadcast, no replay (`SharedFlow`).
+- [x] `JobQueue` — each ticket processed once (`Channel`).
+
+Tests verify rendezvous vs unlimited vs conflated Channel, that `receiveAsFlow` splits work and completes on close, and that the same experiments distinguish StateFlow (state), SharedFlow (broadcast), and Channel (queue).
 
 Interview targets: Channel vs SharedFlow vs StateFlow, why Channel is a queue not a broadcast, when conflated Channel is still the wrong UI-state choice, `receiveAsFlow` vs `consumeAsFlow`.
 
-Fill this yourself after the experiments:
-
 | Behaviour | StateFlow | SharedFlow | Channel |
 |---|---|---|---|
-| Represents current state | ? | ? | ? |
-| New collector gets current value | ? | ? | ? |
-| Broadcast semantics | ? | ? | ? |
-| Queue-like communication | ? | ? | ? |
-| Configurable replay | ? | ? | ? |
-| Typical UI-state choice | ? | ? | ? |
+| Represents current state | Yes (always has `.value`) | No (replay cache is not `.value`) | No |
+| New collector gets current value | Yes — current, not history | Only if `replay > 0` (last N events) | Only unconsumed queued values |
+| Broadcast semantics | Yes | Yes | No — each value goes to one receiver |
+| Queue-like communication | No | No | Yes |
+| Configurable replay | No (always current value) | Yes (`replay`) | No (buffer is a queue, not replay) |
+| Typical UI-state choice | Yes | No (one-time events) | No (work distribution) |
 
 ---
 
@@ -502,12 +502,12 @@ src/
 ├── main/kotlin/practice/
 │   ├── week1/   # Days 1–5  language depth     — implemented
 │   ├── week2/   # Days 6–10 coroutines         — implemented
-│   ├── week3/   # Days 11–15 Flow              — Days 11–14 implemented, Day 15 tests ready
+│   ├── week3/   # Days 11–15 Flow              — implemented
 │   └── week4/   # Days 16–20 architecture      — not started
 └── test/kotlin/practice/
     ├── week1/   # implemented
     ├── week2/   # implemented
-    ├── week3/   # Days 11–14 implemented, Day 15 tests ready
+    ├── week3/   # implemented
     └── week4/   # not started
 ```
 
@@ -545,7 +545,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-Week 1, Week 2, and Days 11–14 production code and tests are done. Day 15 tests are ready (`TODO()` stubs). Remaining items are Days 16–20, plus interview-style explanation of the implemented work.
+Week 1, Week 2, and Week 3 production code and tests are done. Remaining items are Days 16–20, plus interview-style explanation of the implemented work.
 
 - [x] `let` vs `run` vs `apply` vs `also`
 - [x] Null-safety decisions
@@ -558,17 +558,17 @@ Week 1, Week 2, and Days 11–14 production code and tests are done. Day 15 test
 - [x] Cancellation
 - [x] `coroutineScope` vs `supervisorScope`
 - [x] IO vs Default
-- [ ] Cold Flow vs hot stream
+- [x] Cold Flow vs hot stream
 - [x] Important Flow operators
 - [x] StateFlow behaviour
 - [x] SharedFlow/replay behaviour
-- [ ] Channel behaviour
-- [ ] StateFlow vs SharedFlow vs Channel
+- [x] Channel behaviour
+- [x] StateFlow vs SharedFlow vs Channel
 - [ ] Repository responsibilities
 - [ ] UI-state ownership
 - [ ] Race-condition handling
 - [ ] Offline-first/source-of-truth design
-- [x] Coroutine testing (Day 15 Flow/Channel comparison tests are ready)
+- [x] Coroutine testing
 - [ ] Defending architecture choices in an interview
 
 # Definition of Done

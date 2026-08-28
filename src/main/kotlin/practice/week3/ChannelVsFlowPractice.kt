@@ -2,8 +2,13 @@ package practice.week3
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
  * Day 15 — Channel vs SharedFlow vs StateFlow.
@@ -72,14 +77,15 @@ interface MessageStream<T> {
  * `asStateFlow`. Update with `update`. Do not use SharedFlow or Channel.
  */
 class ScreenStore(initial: BoardState = BoardState()) {
-    val state: StateFlow<BoardState> = TODO()
+    private val mState = MutableStateFlow(initial)
+    val state: StateFlow<BoardState> = mState.asStateFlow()
 
     fun setTitle(title: String) {
-        TODO()
+        mState.value = mState.value.copy(title = title)
     }
 
     fun setTickets(tickets: List<Ticket>) {
-        TODO()
+        mState.value = mState.value.copy(tickets = tickets)
     }
 }
 
@@ -98,10 +104,11 @@ class ScreenStore(initial: BoardState = BoardState()) {
  * capacity. Do not use StateFlow or Channel.
  */
 class ToastBus {
-    val toasts: SharedFlow<Toast> = TODO()
+    private val mToasts = MutableSharedFlow<Toast>()
+    val toasts: SharedFlow<Toast> = mToasts.asSharedFlow()
 
     suspend fun show(text: String) {
-        TODO()
+        mToasts.emit(Toast.Shown(text))
     }
 }
 
@@ -118,20 +125,21 @@ class ToastBus {
  * Do not use SharedFlow or StateFlow.
  */
 class JobQueue {
+    val channel = Channel<Ticket>(Channel.UNLIMITED)
     suspend fun submit(ticket: Ticket) {
-        TODO()
+        channel.send(ticket)
     }
 
     suspend fun take(): Ticket {
-        TODO()
+        return channel.receive()
     }
 
     fun tickets(): Flow<Ticket> {
-        TODO()
+        return channel.receiveAsFlow()
     }
 
     fun close() {
-        TODO()
+        channel.close()
     }
 }
 
@@ -176,7 +184,7 @@ object ChannelVsFlowPractice {
      * Do not use StateFlow.
      */
     fun <T> conflated(): Channel<T> {
-        TODO()
+        return Channel(Channel.CONFLATED)
     }
 
     /**
@@ -191,15 +199,15 @@ object ChannelVsFlowPractice {
      * Do not use `consumeAsFlow` (that allows only one collector).
      */
     suspend fun <T> sendTo(channel: Channel<T>, value: T) {
-        TODO()
+        channel.send(value)
     }
 
     suspend fun <T> receiveFrom(channel: Channel<T>): T {
-        TODO()
+        return channel.receive()
     }
 
     fun <T> asFlow(channel: Channel<T>): Flow<T> {
-        TODO()
+        return channel.receiveAsFlow()
     }
 
     /**
@@ -213,7 +221,14 @@ object ChannelVsFlowPractice {
      * Requirement: use `MutableStateFlow`. Do not use SharedFlow or Channel.
      */
     fun <T> stateStream(initial: T): MessageStream<T> {
-        TODO()
+        return object : MessageStream<T> {
+            private val state = MutableStateFlow(initial)
+            override suspend fun emit(value: T) {
+                state.value = value
+            }
+            override fun observe(): Flow<T> = state.asStateFlow()
+            override fun latestOrNull(): T? = state.value
+        }
     }
 
     /**
@@ -227,7 +242,14 @@ object ChannelVsFlowPractice {
      * Do not use StateFlow or Channel.
      */
     fun <T> sharedStream(replay: Int): MessageStream<T> {
-        TODO()
+        return object : MessageStream<T> {
+            private val events = MutableSharedFlow<T>(replay = replay)
+            override suspend fun emit(value: T) {
+                events.emit(value)
+            }
+            override fun observe(): Flow<T> = events.asSharedFlow()
+            override fun latestOrNull(): T? = events.replayCache.lastOrNull()
+        }
     }
 
     /**
@@ -240,6 +262,13 @@ object ChannelVsFlowPractice {
      * Do not use StateFlow or SharedFlow.
      */
     fun <T> channelStream(): MessageStream<T> {
-        TODO()
+        return object : MessageStream<T> {
+            private val channel = Channel<T>(Channel.UNLIMITED)
+            override suspend fun emit(value: T) {
+                channel.send(value)
+            }
+            override fun observe(): Flow<T> = channel.receiveAsFlow()
+            override fun latestOrNull(): T? = null
+        }
     }
 }
