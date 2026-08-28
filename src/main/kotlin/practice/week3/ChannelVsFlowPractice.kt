@@ -77,7 +77,7 @@ interface MessageStream<T> {
  * `asStateFlow`. Update with `update`. Do not use SharedFlow or Channel.
  */
 class ScreenStore(initial: BoardState = BoardState()) {
-    val mState = MutableStateFlow(initial)
+    private val mState = MutableStateFlow(initial)
     val state: StateFlow<BoardState> = mState.asStateFlow()
 
     fun setTitle(title: String) {
@@ -104,7 +104,7 @@ class ScreenStore(initial: BoardState = BoardState()) {
  * capacity. Do not use StateFlow or Channel.
  */
 class ToastBus {
-    val mToasts = MutableSharedFlow<Toast>()
+    private val mToasts = MutableSharedFlow<Toast>()
     val toasts: SharedFlow<Toast> = mToasts.asSharedFlow()
 
     suspend fun show(text: String) {
@@ -139,7 +139,7 @@ class JobQueue {
     }
 
     fun close() {
-        return channel.cancel()
+        channel.close()
     }
 }
 
