@@ -125,20 +125,21 @@ class ToastBus {
  * Do not use SharedFlow or StateFlow.
  */
 class JobQueue {
+    val channel = Channel<Ticket>(Channel.UNLIMITED)
     suspend fun submit(ticket: Ticket) {
-        TODO()
+        channel.send(ticket)
     }
 
     suspend fun take(): Ticket {
-        TODO()
+        return channel.receive()
     }
 
     fun tickets(): Flow<Ticket> {
-        TODO()
+        return channel.receiveAsFlow()
     }
 
     fun close() {
-        TODO()
+        return channel.cancel()
     }
 }
 
