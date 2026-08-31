@@ -1,14 +1,7 @@
 package practice.week4
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Day 17 — State management.
@@ -62,39 +55,9 @@ class UsersController(
     private val repository: UserRepository,
     private val scope: CoroutineScope
 ) {
-    private val _state = MutableStateFlow(UsersScreenState())
-    val state: StateFlow<UsersScreenState> = _state.asStateFlow()
-
-    private var refreshJob: Job? = null
-
-    init {
-        scope.launch(start = CoroutineStart.UNDISPATCHED) {
-            repository.observeUsers().collect { users ->
-                _state.update { it.copy(users = users) }
-            }
-        }
-    }
+    val state: StateFlow<UsersScreenState> = TODO()
 
     fun onAction(action: UsersAction) {
-        when (action) {
-            UsersAction.Load, UsersAction.Retry -> refresh()
-        }
-    }
-
-    private fun refresh() {
-        refreshJob?.cancel()
-        refreshJob = scope.launch {
-            _state.update { it.copy(loading = true, error = null) }
-            try {
-                repository.refresh()
-                _state.update { it.copy(loading = false, error = null) }
-            } catch (cancelled: CancellationException) {
-                throw cancelled
-            } catch (error: Throwable) {
-                _state.update {
-                    it.copy(loading = false, error = error.message ?: "Unknown error")
-                }
-            }
-        }
+        TODO()
     }
 }

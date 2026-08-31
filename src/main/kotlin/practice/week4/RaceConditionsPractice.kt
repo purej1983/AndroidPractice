@@ -1,22 +1,9 @@
 package practice.week4
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Day 18 — Race conditions and search.
@@ -99,58 +86,14 @@ class StaleSearchApi(
  * Do not keep a "latest request id" integer. Do not use `flatMapConcat`.
  * Expose [state] as `StateFlow`, not `MutableStateFlow`.
  */
-@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class SearchController(
     private val api: StaleSearchApi,
     scope: CoroutineScope,
     debounceMillis: Long
 ) {
-    private val queries = MutableStateFlow<String?>(null)
-    private val _state = MutableStateFlow(SearchUiState())
-    val state: StateFlow<SearchUiState> = _state.asStateFlow()
-
-    init {
-        scope.launch(start = CoroutineStart.UNDISPATCHED) {
-            queries
-                .filterNotNull()
-                .let { stream ->
-                    if (debounceMillis <= 0L) stream
-                    else stream.debounce(debounceMillis.milliseconds)
-                }
-                .distinctUntilChanged()
-                .flatMapLatest { query ->
-                    flow {
-                        if (query.isBlank()) {
-                            _state.update { it.copy(loading = false, query = query, error = null) }
-                            return@flow
-                        }
-                        _state.update { it.copy(loading = true, query = query, error = null) }
-                        try {
-                            emit(api.search(query))
-                        } catch (cancelled: CancellationException) {
-                            throw cancelled
-                        } catch (error: Throwable) {
-                            _state.update {
-                                it.copy(loading = false, error = error.message)
-                            }
-                        }
-                    }
-                }
-                .collect { result ->
-                    _state.update {
-                        it.copy(
-                            loading = false,
-                            query = result.query,
-                            results = result.items,
-                            error = null
-                        )
-                    }
-                }
-        }
-    }
+    val state: StateFlow<SearchUiState> = TODO()
 
     fun onQueryChanged(query: String) {
-        _state.update { it.copy(query = query) }
-        queries.value = query
+        TODO()
     }
 }

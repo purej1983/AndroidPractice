@@ -1,26 +1,13 @@
 package practice.week4
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Day 20 — Task Manager capstone.
@@ -32,11 +19,13 @@ import kotlin.time.Duration.Companion.milliseconds
  * - An old search response cannot replace a newer one.
  * - Cached tasks remain if refresh fails.
  *
- * Choices this implementation defends:
- * - [StateFlow] for [TaskUiState]: the screen always has `.value`.
- * - [SharedFlow] replay 0 for [TaskEvent]: snackbars are one-shot.
- * - Local StateFlow table as source of truth; remote writes into it.
- * - Search: debounce → distinctUntilChanged → flatMapLatest.
+ * Decide which primitive fits each surface, then defend it:
+ * - [state] must be readable as current UI state (`.value`).
+ * - [events] must be one-shot (snackbars). A late collector must not
+ *   replay a past Saved. Two current collectors may both need it.
+ * - Local table is the source of truth; remote writes into it.
+ * - Search should not start a request per keystroke, and latest query
+ *   must win.
  * Channel would be wrong for UI state (queue, one consumer) and wrong
  * for snackbars that two collectors might both need.
  */
@@ -169,9 +158,9 @@ class FakeTaskRemote(
 }
 
 /**
- * Capstone controller. See file KDoc for the Flow-type defence.
+ * Capstone controller. Wire [state], [events], load/refresh, add,
+ * complete, and search. See file KDoc for the behaviour to defend.
  */
-@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class TaskManager(
     private val local: TaskLocalStore,
     private val remote: TaskRemote,
@@ -180,109 +169,27 @@ class TaskManager(
     private val clock: () -> Long,
     private val ids: () -> String
 ) {
-    private val _state = MutableStateFlow(TaskUiState())
-    val state: StateFlow<TaskUiState> = _state.asStateFlow()
+    val state: StateFlow<TaskUiState> = TODO()
 
-    private val _events = MutableSharedFlow<TaskEvent>(replay = 0)
-    val events: SharedFlow<TaskEvent> = _events.asSharedFlow()
-
-    private val queries = MutableStateFlow<String?>(null)
-    private var refreshJob: Job? = null
-
-    init {
-        scope.launch(start = CoroutineStart.UNDISPATCHED) {
-            local.observeTasks().collect { cached ->
-                if (_state.value.query.isBlank()) {
-                    _state.update { it.copy(tasks = cached) }
-                }
-            }
-        }
-        scope.launch(start = CoroutineStart.UNDISPATCHED) {
-            queries
-                .filterNotNull()
-                .let { stream ->
-                    if (debounceMillis <= 0L) stream
-                    else stream.debounce(debounceMillis.milliseconds)
-                }
-                .distinctUntilChanged()
-                .flatMapLatest { query ->
-                    flow {
-                        if (query.isBlank()) {
-                            _state.update {
-                                it.copy(query = query, tasks = local.current(), error = null)
-                            }
-                            return@flow
-                        }
-                        try {
-                            emit(remote.search(query))
-                        } catch (cancelled: CancellationException) {
-                            throw cancelled
-                        } catch (error: Throwable) {
-                            _state.update {
-                                it.copy(query = query, error = error.message)
-                            }
-                        }
-                    }
-                }
-                .collect { results ->
-                    _state.update {
-                        it.copy(tasks = results, error = null)
-                    }
-                }
-        }
-    }
+    val events: SharedFlow<TaskEvent> = TODO()
 
     fun load() {
-        refresh()
+        TODO()
     }
 
     fun refresh() {
-        refreshJob?.cancel()
-        refreshJob = scope.launch {
-            _state.update { it.copy(loading = true, error = null) }
-            try {
-                val tasks = remote.fetchAll()
-                local.replaceAll(tasks)
-                _state.update { it.copy(loading = false, error = null) }
-            } catch (cancelled: CancellationException) {
-                throw cancelled
-            } catch (error: Throwable) {
-                _state.update {
-                    it.copy(loading = false, error = error.message ?: "Unknown error")
-                }
-            }
-        }
+        TODO()
     }
 
     fun add(title: String) {
-        scope.launch {
-            val task = Task(
-                id = ids(),
-                title = title,
-                completed = false,
-                updatedAt = clock()
-            )
-            local.upsert(task)
-            try {
-                remote.save(task)
-                _events.emit(TaskEvent.Saved(task.title))
-            } catch (cancelled: CancellationException) {
-                throw cancelled
-            } catch (error: Throwable) {
-                _events.emit(TaskEvent.ShowError(error.message ?: "Unknown error"))
-            }
-        }
+        TODO()
     }
 
     fun complete(id: String) {
-        scope.launch {
-            val current = local.current().firstOrNull { it.id == id } ?: return@launch
-            local.upsert(current.copy(completed = true, updatedAt = clock()))
-        }
+        TODO()
     }
 
     fun search(query: String) {
-        _state.update { it.copy(query = query) }
-        queries.value = query
+        TODO()
     }
 }
