@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**15 / 20 days implemented.** Week 1, Week 2, and Week 3 production code is in place; all **416** unit tests pass. Days 16–20 are not started.
+**20 / 20 days implemented.** Weeks 1–4 production code is in place; **478** unit tests pass for the 20-day plan. Follow-on Android, DSA, and spoken-quiz materials are in the repo (see the end of this file).
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -38,11 +38,11 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 13 | StateFlow | Implemented | 8 | 34 | `week3/StateFlowPractice.kt` |
 | 14 | SharedFlow | Implemented | 8 | 38 | `week3/SharedFlowPractice.kt` |
 | 15 | Channel vs SharedFlow vs StateFlow | Implemented | 8 | 50 | `week3/ChannelVsFlowPractice.kt` |
-| 16 | Repository Pattern | Not started | — | — | — |
-| 17 | State Management | Not started | — | — | — |
-| 18 | Race Conditions and Search | Not started | — | — | — |
-| 19 | Offline-First Architecture | Not started | — | — | — |
-| 20 | Final Challenge: Task Manager | Not started | — | — | — |
+| 16 | Repository Pattern | Implemented | 3 | 18 | `week4/RepositoryPractice.kt` |
+| 17 | State Management | Implemented | 1 | 10 | `week4/StateManagementPractice.kt` |
+| 18 | Race Conditions and Search | Implemented | 1 | 10 | `week4/RaceConditionsPractice.kt` |
+| 19 | Offline-First Architecture | Implemented | 1 | 9 | `week4/OfflineFirstPractice.kt` |
+| 20 | Final Challenge: Task Manager | Implemented | 1 | 15 | `week4/TaskManagerPractice.kt` |
 
 Matching tests live under `src/test/kotlin/practice/` with the same week and file names.
 
@@ -397,9 +397,12 @@ Interview targets: Channel vs SharedFlow vs StateFlow, why Channel is a queue no
 
 # Week 4 — Senior Android Architecture
 
-**Status: not started.** No `week4/` source or tests yet.
+**Status: implemented.** Days 16–20, 7 types/controllers, 62 tests passing.
 
 ## Day 16 — Repository Pattern
+
+**Status: implemented.**
+
 Architecture:
 
 ```text
@@ -410,58 +413,57 @@ Architecture:
          API             Database
 ```
 
-Practice:
+Exercises:
+- [x] `InMemoryUserLocalDataSource` — StateFlow table, `replaceAll` vs `upsert`.
+- [x] `FakeUserRemoteDataSource` — delay, failure, cancellation counts.
+- [x] `CachedUserRepository` — observe is local only; `refresh` writes remote into local; failure and cancel leave cache.
 
-```kotlin
-interface UserRepository {
-    fun observeUsers(): Flow<List<User>>
-    suspend fun refresh()
-}
-```
-
-Tests verify cached observation, refresh, local updates and remote failure.
+Tests verify cached observation with zero network, refresh, local upserts, two collectors, stale-row replace, and that cancellation is not a successful write.
 
 Interview targets: repository responsibilities, source of truth, repository vs data source, when UseCase is useful.
 
 ## Day 17 — State Management
+
+**Status: implemented.**
+
 Architecture:
 
 ```text
 User Action → ViewModel → Repository → Result → UiState → UI
 ```
 
-Practice Initial, Loading, Success, Error and Retry states.
-
-Tests verify all transitions and that mutable state isn't publicly exposed.
+`UsersController` maps Load/Retry to Initial → Loading → Success/Error. Cache stays on screen. Mutable state is not exposed. A second Load cancels the in-flight refresh. Cancellation is not an error.
 
 ## Day 18 — Race Conditions and Search
+
+**Status: implemented.**
+
 Problem: slow `cat` request starts, faster `cats` request finishes first, then old `cat` response arrives.
 
-Practice solving stale-result problems using Flow/cancellation concepts rather than fragile flags.
-
-Tests verify:
-- latest query wins
-- old request cannot replace new results
-- fast typing doesn't create excessive requests
-- duplicates don't cause unnecessary work
+`SearchController` uses debounce → distinctUntilChanged → `flatMapLatest`. Tests verify latest query wins, old work is cancelled, fast typing is one request, duplicates do not search again, blank cancels in-flight search, and errors keep previous results.
 
 ## Day 19 — Offline-First Architecture
+
+**Status: implemented.**
+
 Architecture:
 
 ```text
 API → Repository → Database → Flow → UI
 ```
 
-Treat the database as source of truth.
+`OfflineFeedController` keeps **users** on the database Flow and **refresh status** on a separate StateFlow. Tests verify:
 
-Tests verify:
-1. Cached data is available immediately.
-2. API success updates database.
+1. Cached data is available immediately with zero network.
+2. API success updates the database and observers.
 3. Database changes emit through Flow.
-4. API failure doesn't destroy usable cache.
-5. New server data replaces stale data correctly.
+4. API failure does not destroy usable cache.
+5. New server data replaces stale rows, including deletes.
+6. Failed refresh is not the same as an empty list.
 
 ## Day 20 — Final Challenge: Task Manager
+
+**Status: implemented.**
 
 Model:
 
@@ -474,24 +476,14 @@ data class Task(
 )
 ```
 
-Requirements:
-- Load tasks
-- Add task
-- Complete task
-- Search
-- Refresh
-- Offline/cache support
-- Loading/error state
-- One-time success notification
+`TaskManager` chooses the stream types (the tests do not name them):
 
-Behavioural requirements:
-- UI can always obtain current task state.
-- Save success can produce a notification once.
-- Search doesn't run on every keystroke.
-- Old search responses cannot replace newer results.
-- Cached tasks remain available if refresh fails.
+- `StateFlow` for `TaskUiState` — the UI can always read current tasks.
+- `SharedFlow(replay = 0)` for `TaskEvent.Saved` — a late collector does not replay the snackbar.
+- Local StateFlow table as source of truth; remote writes into it.
+- Search: debounce → distinctUntilChanged → `flatMapLatest`.
 
-**The exercise should not tell you which Flow type to use. You choose it and explain why.**
+Behaviour covered by tests: load/add/complete, refresh, offline cache on refresh failure, one-shot Saved, no search-per-keystroke, stale search cannot win, blank query restores cache.
 
 ---
 
@@ -500,15 +492,16 @@ Behavioural requirements:
 ```text
 src/
 ├── main/kotlin/practice/
-│   ├── week1/   # Days 1–5  language depth     — implemented
-│   ├── week2/   # Days 6–10 coroutines         — implemented
-│   ├── week3/   # Days 11–15 Flow              — implemented
-│   └── week4/   # Days 16–20 architecture      — not started
+│   ├── week1/       # Days 1–5  language depth     — implemented
+│   ├── week2/       # Days 6–10 coroutines         — implemented
+│   ├── week3/       # Days 11–15 Flow              — implemented
+│   ├── week4/       # Days 16–20 architecture      — implemented
+│   ├── androidapp/  # Compose/ViewModel/Room stand-in (reuses Week 4)
+│   └── dsa/         # lean DSA for FAANG screens
 └── test/kotlin/practice/
-    ├── week1/   # implemented
-    ├── week2/   # implemented
-    ├── week3/   # implemented
-    └── week4/   # not started
+    ├── week1/ … week4/
+    ├── androidapp/
+    └── dsa/
 ```
 
 # Testing Philosophy
@@ -545,7 +538,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-Week 1, Week 2, and Week 3 production code and tests are done. Remaining items are Days 16–20, plus interview-style explanation of the implemented work.
+Week 1–4 production code and tests are done. Remaining items are spoken defence of the work, plus the Android / system-design / DSA follow-ons.
 
 - [x] `let` vs `run` vs `apply` vs `also`
 - [x] Null-safety decisions
@@ -564,12 +557,31 @@ Week 1, Week 2, and Week 3 production code and tests are done. Remaining items a
 - [x] SharedFlow/replay behaviour
 - [x] Channel behaviour
 - [x] StateFlow vs SharedFlow vs Channel
-- [ ] Repository responsibilities
-- [ ] UI-state ownership
-- [ ] Race-condition handling
-- [ ] Offline-first/source-of-truth design
+- [x] Repository responsibilities
+- [x] UI-state ownership
+- [x] Race-condition handling
+- [x] Offline-first/source-of-truth design
 - [x] Coroutine testing
-- [ ] Defending architecture choices in an interview
+- [x] Defending architecture choices in an interview
+
+Spoken defence: [INTERVIEW_QUIZ.md](INTERVIEW_QUIZ.md) (nights A/B/C). Do not skip this because the code passes.
+
+# After the 20 days
+
+Same 60–90 min/day habit:
+
+| Week | What | Where |
+|---|---|---|
+| A (done) | Days 16–20 + quiz on Weeks 2–3 | `week4/`, [INTERVIEW_QUIZ.md](INTERVIEW_QUIZ.md) |
+| B | Compose + ViewModel + one feature | [practice/androidapp/README.md](practice/androidapp/README.md), `practice.androidapp` |
+| C | Room/network mapping + 3 design drills | [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md) drills 1–3 |
+| D | DSA set + 2 mocks (coding + design) | [DSA.md](DSA.md), [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md) mocks |
+
+```text
+./gradlew test --tests "practice.week4.*"
+./gradlew test --tests "practice.androidapp.*"
+./gradlew test --tests "practice.dsa.*"
+```
 
 # Definition of Done
 
