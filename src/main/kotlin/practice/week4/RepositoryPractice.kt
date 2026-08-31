@@ -1,6 +1,9 @@
 package practice.week4
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * Day 16 — Repository pattern.
@@ -74,20 +77,21 @@ interface UserRepository {
 class InMemoryUserLocalDataSource(
     initial: List<CachedUser> = emptyList()
 ) : UserLocalDataSource {
+    private val mutableUsers = MutableStateFlow<List<CachedUser>>(initial)
     override fun observeUsers(): Flow<List<CachedUser>> {
-        TODO()
+        return mutableUsers.asStateFlow()
     }
 
     override suspend fun currentUsers(): List<CachedUser> {
-        TODO()
+        return mutableUsers.value
     }
 
     override suspend fun replaceAll(users: List<CachedUser>) {
-        TODO()
+        mutableUsers.update { users }
     }
 
     override suspend fun upsert(user: CachedUser) {
-        TODO()
+        mutableUsers.update { users -> users.filterNot { it.id == user.id } + user }
     }
 }
 
