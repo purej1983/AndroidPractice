@@ -156,10 +156,11 @@ class CachedUserRepository(
     private val remote: UserRemoteDataSource
 ) : UserRepository {
     override fun observeUsers(): Flow<List<CachedUser>> {
-        TODO()
+        return local.observeUsers()
     }
 
     override suspend fun refresh() {
-        TODO()
+        val result = remote.fetchUsers()
+        local.replaceAll(result)
     }
 }
