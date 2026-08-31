@@ -1,14 +1,7 @@
 package practice.week4
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Day 19 — Offline-first architecture.
@@ -54,34 +47,11 @@ class OfflineFeedController(
     private val repository: UserRepository,
     private val scope: CoroutineScope
 ) {
-    private val _users = MutableStateFlow<List<CachedUser>>(emptyList())
-    val users: StateFlow<List<CachedUser>> = _users.asStateFlow()
+    val users: StateFlow<List<CachedUser>> = TODO()
 
-    private val _refreshStatus = MutableStateFlow<RefreshStatus>(RefreshStatus.Idle)
-    val refreshStatus: StateFlow<RefreshStatus> = _refreshStatus.asStateFlow()
-
-    private var refreshJob: Job? = null
-
-    init {
-        scope.launch(start = CoroutineStart.UNDISPATCHED) {
-            repository.observeUsers().collect { cached ->
-                _users.value = cached
-            }
-        }
-    }
+    val refreshStatus: StateFlow<RefreshStatus> = TODO()
 
     fun refresh() {
-        refreshJob?.cancel()
-        refreshJob = scope.launch {
-            _refreshStatus.value = RefreshStatus.Refreshing
-            try {
-                repository.refresh()
-                _refreshStatus.value = RefreshStatus.Idle
-            } catch (cancelled: CancellationException) {
-                throw cancelled
-            } catch (error: Throwable) {
-                _refreshStatus.value = RefreshStatus.Failed(error.message ?: "Unknown error")
-            }
-        }
+        TODO()
     }
 }

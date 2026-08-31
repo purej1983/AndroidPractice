@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**20 / 20 days implemented.** Weeks 1–4 production code is in place; **478** unit tests pass for the 20-day plan. Follow-on Android, DSA, and spoken-quiz materials are in the repo (see the end of this file).
+**15 / 20 days implemented.** Weeks 1–3 production code is in place; **416** unit tests pass. Days 16–20 tests are ready (`TODO()` stubs). Follow-on Android, DSA, and spoken-quiz materials are in the repo (see the end of this file).
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -38,11 +38,11 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 13 | StateFlow | Implemented | 8 | 34 | `week3/StateFlowPractice.kt` |
 | 14 | SharedFlow | Implemented | 8 | 38 | `week3/SharedFlowPractice.kt` |
 | 15 | Channel vs SharedFlow vs StateFlow | Implemented | 8 | 50 | `week3/ChannelVsFlowPractice.kt` |
-| 16 | Repository Pattern | Implemented | 3 | 18 | `week4/RepositoryPractice.kt` |
-| 17 | State Management | Implemented | 1 | 10 | `week4/StateManagementPractice.kt` |
-| 18 | Race Conditions and Search | Implemented | 1 | 10 | `week4/RaceConditionsPractice.kt` |
-| 19 | Offline-First Architecture | Implemented | 1 | 9 | `week4/OfflineFirstPractice.kt` |
-| 20 | Final Challenge: Task Manager | Implemented | 1 | 15 | `week4/TaskManagerPractice.kt` |
+| 16 | Repository Pattern | Tests ready | 3 | 18 | `week4/RepositoryPractice.kt` |
+| 17 | State Management | Tests ready | 1 | 10 | `week4/StateManagementPractice.kt` |
+| 18 | Race Conditions and Search | Tests ready | 1 | 10 | `week4/RaceConditionsPractice.kt` |
+| 19 | Offline-First Architecture | Tests ready | 1 | 9 | `week4/OfflineFirstPractice.kt` |
+| 20 | Final Challenge: Task Manager | Tests ready | 1 | 15 | `week4/TaskManagerPractice.kt` |
 
 Matching tests live under `src/test/kotlin/practice/` with the same week and file names.
 
@@ -397,11 +397,11 @@ Interview targets: Channel vs SharedFlow vs StateFlow, why Channel is a queue no
 
 # Week 4 — Senior Android Architecture
 
-**Status: implemented.** Days 16–20, 7 types/controllers, 62 tests passing.
+**Status: tests ready.** Days 16–20 production bodies are `TODO()`. 62 tests. Do not modify the tests.
 
 ## Day 16 — Repository Pattern
 
-**Status: implemented.**
+**Status: tests ready.** Production bodies are `TODO()`.
 
 Architecture:
 
@@ -414,9 +414,9 @@ Architecture:
 ```
 
 Exercises:
-- [x] `InMemoryUserLocalDataSource` — StateFlow table, `replaceAll` vs `upsert`.
-- [x] `FakeUserRemoteDataSource` — delay, failure, cancellation counts.
-- [x] `CachedUserRepository` — observe is local only; `refresh` writes remote into local; failure and cancel leave cache.
+- [ ] `InMemoryUserLocalDataSource` — StateFlow table, `replaceAll` vs `upsert`.
+- [ ] `FakeUserRemoteDataSource` — delay, failure, cancellation counts.
+- [ ] `CachedUserRepository` — observe is local only; `refresh` writes remote into local; failure and cancel leave cache.
 
 Tests verify cached observation with zero network, refresh, local upserts, two collectors, stale-row replace, and that cancellation is not a successful write.
 
@@ -424,7 +424,7 @@ Interview targets: repository responsibilities, source of truth, repository vs d
 
 ## Day 17 — State Management
 
-**Status: implemented.**
+**Status: tests ready.** Production bodies are `TODO()`.
 
 Architecture:
 
@@ -436,7 +436,7 @@ User Action → ViewModel → Repository → Result → UiState → UI
 
 ## Day 18 — Race Conditions and Search
 
-**Status: implemented.**
+**Status: tests ready.** Production bodies are `TODO()`.
 
 Problem: slow `cat` request starts, faster `cats` request finishes first, then old `cat` response arrives.
 
@@ -444,7 +444,7 @@ Problem: slow `cat` request starts, faster `cats` request finishes first, then o
 
 ## Day 19 — Offline-First Architecture
 
-**Status: implemented.**
+**Status: tests ready.** Production bodies are `TODO()`.
 
 Architecture:
 
@@ -463,7 +463,7 @@ API → Repository → Database → Flow → UI
 
 ## Day 20 — Final Challenge: Task Manager
 
-**Status: implemented.**
+**Status: tests ready.** Production bodies are `TODO()`.
 
 Model:
 
@@ -476,12 +476,12 @@ data class Task(
 )
 ```
 
-`TaskManager` chooses the stream types (the tests do not name them):
+`TaskManager` is yours to implement. The tests describe behaviour; you choose the stream types and defend them:
 
-- `StateFlow` for `TaskUiState` — the UI can always read current tasks.
-- `SharedFlow(replay = 0)` for `TaskEvent.Saved` — a late collector does not replay the snackbar.
-- Local StateFlow table as source of truth; remote writes into it.
-- Search: debounce → distinctUntilChanged → `flatMapLatest`.
+- The UI can always read current tasks.
+- Save success is one-shot — a late collector must not replay the snackbar.
+- Local table is the source of truth; remote writes into it.
+- Search must not run on every keystroke, and an old response must not win.
 
 Behaviour covered by tests: load/add/complete, refresh, offline cache on refresh failure, one-shot Saved, no search-per-keystroke, stale search cannot win, blank query restores cache.
 
@@ -495,7 +495,7 @@ src/
 │   ├── week1/       # Days 1–5  language depth     — implemented
 │   ├── week2/       # Days 6–10 coroutines         — implemented
 │   ├── week3/       # Days 11–15 Flow              — implemented
-│   ├── week4/       # Days 16–20 architecture      — implemented
+│   ├── week4/       # Days 16–20 architecture      — tests ready (`TODO()`)
 │   ├── androidapp/  # Compose/ViewModel/Room stand-in (reuses Week 4)
 │   └── dsa/         # lean DSA for FAANG screens
 └── test/kotlin/practice/
@@ -538,7 +538,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-Week 1–4 production code and tests are done. Remaining items are spoken defence of the work, plus the Android / system-design / DSA follow-ons.
+Week 1–3 production code and tests are done. Days 16–20 tests are ready (`TODO()` stubs). Remaining items are Week 4 practice, spoken defence, plus the Android / system-design / DSA follow-ons.
 
 - [x] `let` vs `run` vs `apply` vs `also`
 - [x] Null-safety decisions
@@ -557,12 +557,12 @@ Week 1–4 production code and tests are done. Remaining items are spoken defenc
 - [x] SharedFlow/replay behaviour
 - [x] Channel behaviour
 - [x] StateFlow vs SharedFlow vs Channel
-- [x] Repository responsibilities
-- [x] UI-state ownership
-- [x] Race-condition handling
-- [x] Offline-first/source-of-truth design
+- [ ] Repository responsibilities
+- [ ] UI-state ownership
+- [ ] Race-condition handling
+- [ ] Offline-first/source-of-truth design
 - [x] Coroutine testing
-- [x] Defending architecture choices in an interview
+- [ ] Defending architecture choices in an interview
 
 Spoken defence: [INTERVIEW_QUIZ.md](INTERVIEW_QUIZ.md) (nights A/B/C). Do not skip this because the code passes.
 
@@ -572,7 +572,7 @@ Same 60–90 min/day habit:
 
 | Week | What | Where |
 |---|---|---|
-| A (done) | Days 16–20 + quiz on Weeks 2–3 | `week4/`, [INTERVIEW_QUIZ.md](INTERVIEW_QUIZ.md) |
+| A | Days 16–20 + quiz on Weeks 2–3 | `week4/`, [INTERVIEW_QUIZ.md](INTERVIEW_QUIZ.md) |
 | B | Compose + ViewModel + one feature | [practice/androidapp/README.md](practice/androidapp/README.md), `practice.androidapp` |
 | C | Room/network mapping + 3 design drills | [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md) drills 1–3 |
 | D | DSA set + 2 mocks (coding + design) | [DSA.md](DSA.md), [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md) mocks |
