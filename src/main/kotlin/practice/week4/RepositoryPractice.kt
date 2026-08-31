@@ -1,6 +1,12 @@
 package practice.week4
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Day 16 — Repository pattern.
@@ -74,20 +80,21 @@ interface UserRepository {
 class InMemoryUserLocalDataSource(
     initial: List<CachedUser> = emptyList()
 ) : UserLocalDataSource {
+    private val mutableUsers = MutableStateFlow<List<CachedUser>>(initial)
     override fun observeUsers(): Flow<List<CachedUser>> {
-        TODO()
+        return mutableUsers.asStateFlow()
     }
 
     override suspend fun currentUsers(): List<CachedUser> {
-        TODO()
+        return mutableUsers.value
     }
 
     override suspend fun replaceAll(users: List<CachedUser>) {
-        TODO()
+        mutableUsers.update { users }
     }
 
     override suspend fun upsert(user: CachedUser) {
-        TODO()
+        mutableUsers.update { users -> users.filterNot { it.id == user.id } + user }
     }
 }
 
@@ -104,20 +111,32 @@ class FakeUserRemoteDataSource(
     private val delayMillis: Long = 0L,
     private var failure: Throwable? = null
 ) : UserRemoteDataSource {
-    val startedFetches: Int get() = TODO()
-    val completedFetches: Int get() = TODO()
-    val cancelledFetches: Int get() = TODO()
+    private var mStartedFetches = 0
+    private var mCompletedFetches = 0
+    private var mCancelledFetches = 0
+    val startedFetches: Int get() = mStartedFetches
+    val completedFetches: Int get() = mCompletedFetches
+    val cancelledFetches: Int get() = mCancelledFetches
 
     fun setUsers(next: List<CachedUser>) {
-        TODO()
+        users = next.toList()
     }
 
     fun setFailure(error: Throwable?) {
-        TODO()
+        failure = error
     }
 
     override suspend fun fetchUsers(): List<CachedUser> {
-        TODO()
+        mStartedFetches += 1
+        try {
+            delay(delayMillis.milliseconds)
+            failure?.let { throw it }
+            mCompletedFetches += 1
+            return users.toList()
+        } catch (cancelled: CancellationException) {
+            mCancelledFetches += 1
+            throw cancelled
+        }
     }
 }
 
@@ -137,10 +156,11 @@ class CachedUserRepository(
     private val remote: UserRemoteDataSource
 ) : UserRepository {
     override fun observeUsers(): Flow<List<CachedUser>> {
-        TODO()
+        return local.observeUsers()
     }
 
     override suspend fun refresh() {
-        TODO()
+        val result = remote.fetchUsers()
+        local.replaceAll(result)
     }
 }
