@@ -61,6 +61,11 @@ class UsersController(
     private val repository: UserRepository,
     private val scope: CoroutineScope
 ) {
+    private val _state = MutableStateFlow(UsersScreenState())
+    val state: StateFlow<UsersScreenState> = _state.asStateFlow()
+
+    private var refreshJob: Job? = null
+
     init {
         scope.launch {
             repository.observeUsers().collect { users ->
@@ -69,23 +74,23 @@ class UsersController(
         }
     }
 
-    private val _state = MutableStateFlow(UsersScreenState())
-    val state: StateFlow<UsersScreenState> = _state.asStateFlow()
-    private var loadJob: Job? = null
-
     fun onAction(action: UsersAction) {
-        loadJob?.cancel()
-        _state.update { state -> state.copy(loading = true) }
-        loadJob = scope.launch {
+        when (action) {
+            UsersAction.Load, UsersAction.Retry -> load()
+        }
+    }
+
+    private fun load() {
+        _state.update { it.copy(loading = true, error = null) }
+        refreshJob?.cancel()
+        refreshJob = scope.launch {
             try {
                 repository.refresh()
-                repository.observeUsers().collect { users ->
-                    _state.update { state -> state.copy(loading = false, users = users, error = null) }
-                }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                _state.update { state -> state.copy(loading = false, error = e.message ?: "Unknown error") }
+                _state.update { it.copy(loading = false, error = null) }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Throwable) {
+                _state.update { it.copy(loading = false, error = error.message) }
             }
         }
     }
