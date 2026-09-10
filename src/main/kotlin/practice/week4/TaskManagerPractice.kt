@@ -1,6 +1,7 @@
 package practice.week4
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -189,12 +190,42 @@ class TaskManager(
         }
     }
 
+    private var refreshJob: Job? = null
+
     fun load() {
-        TODO()
+        setLoading(true)
+        refreshJob?.cancel()
+        refreshJob = scope.launch {
+            try {
+                val tasks = remote.fetchAll()
+                local.replaceAll(tasks)
+                _state.update { it.copy(loading = false, error = null) }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Throwable) {
+                _state.update { it.copy(loading = false, error = error.message) }
+            }
+        }
     }
 
     fun refresh() {
-        TODO()
+        setLoading(true)
+        refreshJob?.cancel()
+        refreshJob = scope.launch {
+            try {
+                val tasks = remote.fetchAll()
+                local.replaceAll(tasks)
+                _state.update { it.copy(loading = false, error = null) }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Throwable) {
+                _state.update { it.copy(loading = false, error = error.message) }
+            }
+        }
+    }
+
+    private fun setLoading(loading: Boolean, error: String? = null) {
+        _state.update { it.copy(loading = loading, error = error) }
     }
 
     fun add(title: String) {
