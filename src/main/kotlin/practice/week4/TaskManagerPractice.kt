@@ -2,9 +2,11 @@ package practice.week4
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.coroutines.cancellation.CancellationException
@@ -169,9 +171,12 @@ class TaskManager(
     private val clock: () -> Long,
     private val ids: () -> String
 ) {
-    val state: StateFlow<TaskUiState> = TODO()
 
-    val events: SharedFlow<TaskEvent> = TODO()
+    private val _state = MutableStateFlow(TaskUiState())
+    val state: StateFlow<TaskUiState> = _state.asStateFlow()
+
+    private val _events = MutableSharedFlow<TaskEvent>()
+    val events: SharedFlow<TaskEvent> = _events.asSharedFlow()
 
     fun load() {
         TODO()
