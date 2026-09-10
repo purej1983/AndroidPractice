@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**17 / 20 days implemented.** Weeks 1–3 and Days 16–17 production code is in place; **444** unit tests pass. Days 18–20 tests are ready (`TODO()` stubs). Follow-on Android, DSA, and spoken-quiz materials are in the repo (see the end of this file).
+**19 / 20 days implemented.** Weeks 1–3 and Days 16–19 production code is in place; **463** unit tests pass. Day 20 tests are ready (`TODO()` stubs). Follow-on Android, DSA, and spoken-quiz materials are in the repo (see the end of this file).
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -40,8 +40,8 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 15 | Channel vs SharedFlow vs StateFlow | Implemented | 8 | 50 | `week3/ChannelVsFlowPractice.kt` |
 | 16 | Repository Pattern | Implemented | 3 | 18 | `week4/RepositoryPractice.kt` |
 | 17 | State Management | Implemented | 1 | 10 | `week4/StateManagementPractice.kt` |
-| 18 | Race Conditions and Search | Tests ready | 1 | 10 | `week4/RaceConditionsPractice.kt` |
-| 19 | Offline-First Architecture | Tests ready | 1 | 9 | `week4/OfflineFirstPractice.kt` |
+| 18 | Race Conditions and Search | Implemented | 1 | 10 | `week4/RaceConditionsPractice.kt` |
+| 19 | Offline-First Architecture | Implemented | 1 | 9 | `week4/OfflineFirstPractice.kt` |
 | 20 | Final Challenge: Task Manager | Tests ready | 1 | 15 | `week4/TaskManagerPractice.kt` |
 
 Matching tests live under `src/test/kotlin/practice/` with the same week and file names.
@@ -397,7 +397,7 @@ Interview targets: Channel vs SharedFlow vs StateFlow, why Channel is a queue no
 
 # Week 4 — Senior Android Architecture
 
-**Status: in progress.** Days 16–17 implemented (4 exercises, 28 tests). Days 18–20 production bodies are `TODO()`. 62 tests. Do not modify the tests.
+**Status: in progress.** Days 16–19 implemented (6 exercises, 47 tests). Day 20 production bodies are `TODO()`. 62 tests. Do not modify the tests.
 
 ## Day 16 — Repository Pattern
 
@@ -441,15 +441,20 @@ Interview targets: UI-state ownership, why expose `StateFlow` not `MutableStateF
 
 ## Day 18 — Race Conditions and Search
 
-**Status: tests ready.** Production bodies are `TODO()`.
+**Status: implemented.**
 
 Problem: slow `cat` request starts, faster `cats` request finishes first, then old `cat` response arrives.
 
-`SearchController` uses debounce → distinctUntilChanged → `flatMapLatest`. Tests verify latest query wins, old work is cancelled, fast typing is one request, duplicates do not search again, blank cancels in-flight search, and errors keep previous results.
+Exercises:
+- [x] `SearchController` — debounce → `distinctUntilChanged` → `flatMapLatest`; a newer query cancels in-flight search.
+
+Tests verify latest query wins, old work is cancelled, fast typing is one request, duplicates do not search again, blank cancels in-flight search, and errors keep previous results.
+
+Interview targets: why `flatMapLatest` beats a request-id flag, debounce then `distinctUntilChanged`, cancellation is not a search error.
 
 ## Day 19 — Offline-First Architecture
 
-**Status: tests ready.** Production bodies are `TODO()`.
+**Status: implemented.**
 
 Architecture:
 
@@ -457,7 +462,10 @@ Architecture:
 API → Repository → Database → Flow → UI
 ```
 
-`OfflineFeedController` keeps **users** on the database Flow and **refresh status** on a separate StateFlow. Tests verify:
+Exercises:
+- [x] `OfflineFeedController` — collect the local table into `StateFlow`; keep refresh status separate; a new refresh cancels the previous one.
+
+Tests verify:
 
 1. Cached data is available immediately with zero network.
 2. API success updates the database and observers.
@@ -465,6 +473,8 @@ API → Repository → Database → Flow → UI
 4. API failure does not destroy usable cache.
 5. New server data replaces stale rows, including deletes.
 6. Failed refresh is not the same as an empty list.
+
+Interview targets: database as source of truth, why refresh status is not the user list, why `replaceAll` (not merge) drops deletes, cancellation is not a failed refresh.
 
 ## Day 20 — Final Challenge: Task Manager
 
@@ -500,7 +510,7 @@ src/
 │   ├── week1/       # Days 1–5  language depth     — implemented
 │   ├── week2/       # Days 6–10 coroutines         — implemented
 │   ├── week3/       # Days 11–15 Flow              — implemented
-│   ├── week4/       # Days 16–20 architecture      — Days 16–17 implemented; 18–20 TODO()
+│   ├── week4/       # Days 16–20 architecture      — Days 16–19 implemented; 20 TODO()
 │   ├── androidapp/  # Compose/ViewModel/Room stand-in (reuses Week 4)
 │   └── dsa/         # lean DSA for FAANG screens
 └── test/kotlin/practice/
@@ -543,7 +553,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-Week 1–3 production code and tests are done. Days 16–17 implemented. Days 18–20 tests are ready (`TODO()` stubs). Remaining items are Days 18–20, spoken defence, plus the Android / system-design / DSA follow-ons.
+Week 1–3 production code and tests are done. Days 16–19 implemented. Day 20 tests are ready (`TODO()` stubs). Remaining items are Day 20, spoken defence, plus the Android / system-design / DSA follow-ons.
 
 - [x] `let` vs `run` vs `apply` vs `also`
 - [x] Null-safety decisions
@@ -564,8 +574,8 @@ Week 1–3 production code and tests are done. Days 16–17 implemented. Days 18
 - [x] StateFlow vs SharedFlow vs Channel
 - [x] Repository responsibilities
 - [x] UI-state ownership
-- [ ] Race-condition handling
-- [ ] Offline-first/source-of-truth design
+- [x] Race-condition handling
+- [x] Offline-first/source-of-truth design
 - [x] Coroutine testing
 - [ ] Defending architecture choices in an interview
 
