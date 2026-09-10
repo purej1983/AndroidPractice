@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
@@ -177,6 +178,16 @@ class TaskManager(
 
     private val _events = MutableSharedFlow<TaskEvent>()
     val events: SharedFlow<TaskEvent> = _events.asSharedFlow()
+
+    init {
+        scope.launch {
+            local.observeTasks().collect { tasks ->
+                _state.update {
+                    it.copy(tasks = tasks)
+                }
+            }
+        }
+    }
 
     fun load() {
         TODO()
