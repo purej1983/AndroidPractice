@@ -116,31 +116,39 @@ class SearchController(
                 .flatMapLatest { query ->
                     flow {
                         if (query.isBlank()) {
-                            _state.update { it.copy(loading = false) }
+                            emit(SearchEvent.Idle)
                         } else {
-                            _state.update { it.copy(loading = true, error = null) }
+                            emit(SearchEvent.Loading)
                             try {
-                                val result = api.search(query)
-                                _state.update {
-                                    it.copy(
-                                        loading = false,
-                                        results = result.items,
-                                        error = null
-                                    )
-                                }
+                                emit(SearchEvent.Success(api.search(query).items))
                             } catch (cancelled: CancellationException) {
                                 throw cancelled
                             } catch (error: Throwable) {
-                                _state.update {
-                                    it.copy(loading = false, error = error.message)
-                                }
+                                emit(SearchEvent.Failure(error.message))
                             }
                         }
-                        emit(Unit)
                     }
                 }
-                .collect { }
+                .collect { event ->
+                    when (event) {
+                        SearchEvent.Idle -> _state.update { it.copy(loading = false) }
+                        SearchEvent.Loading -> _state.update { it.copy(loading = true, error = null) }
+                        is SearchEvent.Success -> _state.update {
+                            it.copy(loading = false, results = event.items, error = null)
+                        }
+                        is SearchEvent.Failure -> _state.update {
+                            it.copy(loading = false, error = event.message)
+                        }
+                    }
+                }
         }
+    }
+
+    private sealed interface SearchEvent {
+        data object Idle : SearchEvent
+        data object Loading : SearchEvent
+        data class Success(val items: List<CatalogHit>) : SearchEvent
+        data class Failure(val message: String?) : SearchEvent
     }
 
     fun onQueryChanged(query: String) {
