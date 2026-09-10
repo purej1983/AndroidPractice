@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**15 / 20 days implemented.** Weeks 1–3 production code is in place; **416** unit tests pass. Days 16–20 tests are ready (`TODO()` stubs). Follow-on Android, DSA, and spoken-quiz materials are in the repo (see the end of this file).
+**17 / 20 days implemented.** Weeks 1–3 and Days 16–17 production code is in place; **444** unit tests pass. Days 18–20 tests are ready (`TODO()` stubs). Follow-on Android, DSA, and spoken-quiz materials are in the repo (see the end of this file).
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -38,8 +38,8 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 13 | StateFlow | Implemented | 8 | 34 | `week3/StateFlowPractice.kt` |
 | 14 | SharedFlow | Implemented | 8 | 38 | `week3/SharedFlowPractice.kt` |
 | 15 | Channel vs SharedFlow vs StateFlow | Implemented | 8 | 50 | `week3/ChannelVsFlowPractice.kt` |
-| 16 | Repository Pattern | Tests ready | 3 | 18 | `week4/RepositoryPractice.kt` |
-| 17 | State Management | Tests ready | 1 | 10 | `week4/StateManagementPractice.kt` |
+| 16 | Repository Pattern | Implemented | 3 | 18 | `week4/RepositoryPractice.kt` |
+| 17 | State Management | Implemented | 1 | 10 | `week4/StateManagementPractice.kt` |
 | 18 | Race Conditions and Search | Tests ready | 1 | 10 | `week4/RaceConditionsPractice.kt` |
 | 19 | Offline-First Architecture | Tests ready | 1 | 9 | `week4/OfflineFirstPractice.kt` |
 | 20 | Final Challenge: Task Manager | Tests ready | 1 | 15 | `week4/TaskManagerPractice.kt` |
@@ -397,11 +397,11 @@ Interview targets: Channel vs SharedFlow vs StateFlow, why Channel is a queue no
 
 # Week 4 — Senior Android Architecture
 
-**Status: tests ready.** Days 16–20 production bodies are `TODO()`. 62 tests. Do not modify the tests.
+**Status: in progress.** Days 16–17 implemented (4 exercises, 28 tests). Days 18–20 production bodies are `TODO()`. 62 tests. Do not modify the tests.
 
 ## Day 16 — Repository Pattern
 
-**Status: tests ready.** Production bodies are `TODO()`.
+**Status: implemented.**
 
 Architecture:
 
@@ -414,9 +414,9 @@ Architecture:
 ```
 
 Exercises:
-- [ ] `InMemoryUserLocalDataSource` — StateFlow table, `replaceAll` vs `upsert`.
-- [ ] `FakeUserRemoteDataSource` — delay, failure, cancellation counts.
-- [ ] `CachedUserRepository` — observe is local only; `refresh` writes remote into local; failure and cancel leave cache.
+- [x] `InMemoryUserLocalDataSource` — StateFlow table, `replaceAll` vs `upsert`.
+- [x] `FakeUserRemoteDataSource` — delay, failure, cancellation counts.
+- [x] `CachedUserRepository` — observe is local only; `refresh` writes remote into local; failure and cancel leave cache.
 
 Tests verify cached observation with zero network, refresh, local upserts, two collectors, stale-row replace, and that cancellation is not a successful write.
 
@@ -424,7 +424,7 @@ Interview targets: repository responsibilities, source of truth, repository vs d
 
 ## Day 17 — State Management
 
-**Status: tests ready.** Production bodies are `TODO()`.
+**Status: implemented.**
 
 Architecture:
 
@@ -432,7 +432,12 @@ Architecture:
 User Action → ViewModel → Repository → Result → UiState → UI
 ```
 
-`UsersController` maps Load/Retry to Initial → Loading → Success/Error. Cache stays on screen. Mutable state is not exposed. A second Load cancels the in-flight refresh. Cancellation is not an error.
+Exercises:
+- [x] `UsersController` — collect cache into `StateFlow`; Load/Retry drive Initial → Loading → Success/Error; a second Load cancels the in-flight refresh.
+
+Tests verify cache before load, loading keeps users, error keeps cache, retry after error, second Load cancels in-flight refresh, cancellation is not an error, Load and Retry are the same action, and mutable state is not exposed.
+
+Interview targets: UI-state ownership, why expose `StateFlow` not `MutableStateFlow`, why cancellation is not a load error, latest-wins for retry.
 
 ## Day 18 — Race Conditions and Search
 
@@ -495,7 +500,7 @@ src/
 │   ├── week1/       # Days 1–5  language depth     — implemented
 │   ├── week2/       # Days 6–10 coroutines         — implemented
 │   ├── week3/       # Days 11–15 Flow              — implemented
-│   ├── week4/       # Days 16–20 architecture      — tests ready (`TODO()`)
+│   ├── week4/       # Days 16–20 architecture      — Days 16–17 implemented; 18–20 TODO()
 │   ├── androidapp/  # Compose/ViewModel/Room stand-in (reuses Week 4)
 │   └── dsa/         # lean DSA for FAANG screens
 └── test/kotlin/practice/
@@ -538,7 +543,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-Week 1–3 production code and tests are done. Days 16–20 tests are ready (`TODO()` stubs). Remaining items are Week 4 practice, spoken defence, plus the Android / system-design / DSA follow-ons.
+Week 1–3 production code and tests are done. Days 16–17 implemented. Days 18–20 tests are ready (`TODO()` stubs). Remaining items are Days 18–20, spoken defence, plus the Android / system-design / DSA follow-ons.
 
 - [x] `let` vs `run` vs `apply` vs `also`
 - [x] Null-safety decisions
@@ -557,8 +562,8 @@ Week 1–3 production code and tests are done. Days 16–20 tests are ready (`TO
 - [x] SharedFlow/replay behaviour
 - [x] Channel behaviour
 - [x] StateFlow vs SharedFlow vs Channel
-- [ ] Repository responsibilities
-- [ ] UI-state ownership
+- [x] Repository responsibilities
+- [x] UI-state ownership
 - [ ] Race-condition handling
 - [ ] Offline-first/source-of-truth design
 - [x] Coroutine testing

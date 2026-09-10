@@ -1,9 +1,20 @@
 package practice.week4
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Day 18 — Race conditions and search.
@@ -86,14 +97,62 @@ class StaleSearchApi(
  * Do not keep a "latest request id" integer. Do not use `flatMapConcat`.
  * Expose [state] as `StateFlow`, not `MutableStateFlow`.
  */
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class SearchController(
     private val api: StaleSearchApi,
     scope: CoroutineScope,
     debounceMillis: Long
 ) {
-    val state: StateFlow<SearchUiState> = TODO()
+    private val _state = MutableStateFlow(SearchUiState())
+    val state: StateFlow<SearchUiState> = _state.asStateFlow()
+
+    private val queries = MutableStateFlow("")
+
+    init {
+        scope.launch {
+            queries
+                .debounce(debounceMillis.milliseconds)
+                .distinctUntilChanged()
+                .flatMapLatest { query ->
+                    flow {
+                        if (query.isBlank()) {
+                            emit(SearchEvent.Idle)
+                        } else {
+                            emit(SearchEvent.Loading)
+                            try {
+                                emit(SearchEvent.Success(api.search(query).items))
+                            } catch (cancelled: CancellationException) {
+                                throw cancelled
+                            } catch (error: Throwable) {
+                                emit(SearchEvent.Failure(error.message))
+                            }
+                        }
+                    }
+                }
+                .collect { event ->
+                    when (event) {
+                        SearchEvent.Idle -> _state.update { it.copy(loading = false) }
+                        SearchEvent.Loading -> _state.update { it.copy(loading = true, error = null) }
+                        is SearchEvent.Success -> _state.update {
+                            it.copy(loading = false, results = event.items, error = null)
+                        }
+                        is SearchEvent.Failure -> _state.update {
+                            it.copy(loading = false, error = event.message)
+                        }
+                    }
+                }
+        }
+    }
+
+    private sealed interface SearchEvent {
+        data object Idle : SearchEvent
+        data object Loading : SearchEvent
+        data class Success(val items: List<CatalogHit>) : SearchEvent
+        data class Failure(val message: String?) : SearchEvent
+    }
 
     fun onQueryChanged(query: String) {
-        TODO()
+        _state.update { it.copy(query = query) }
+        queries.value = query
     }
 }
