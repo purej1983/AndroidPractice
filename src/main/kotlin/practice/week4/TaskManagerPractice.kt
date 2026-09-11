@@ -1,5 +1,6 @@
 package practice.week4
 
+import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -245,7 +246,10 @@ class TaskManager(
     }
 
     fun complete(id: String) {
-        TODO()
+        scope.launch {
+            val updateTask = local.current().single { it.id == id }.copy(completed = true, updatedAt = clock())
+            local.upsert(updateTask)
+        }
     }
 
     fun search(query: String) {
