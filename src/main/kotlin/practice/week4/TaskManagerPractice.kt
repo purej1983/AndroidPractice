@@ -241,7 +241,6 @@ class TaskManager(
     }
 
     private var refreshJob: Job? = null
-    private var seacchJob: Job? = null
 
     fun load() {
         setLoading(true)
