@@ -229,7 +229,19 @@ class TaskManager(
     }
 
     fun add(title: String) {
-        TODO()
+        scope.launch {
+            val newTask = Task(ids(), title, completed = false, clock())
+            local.upsert(newTask)
+            try {
+                remote.save(newTask)
+                _events.emit(TaskEvent.Saved(title))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (error: Throwable) {
+                _events.emit(TaskEvent.ShowError(error.message?:"Unknown error"))
+            }
+        }
+
     }
 
     fun complete(id: String) {
