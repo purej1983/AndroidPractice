@@ -19,7 +19,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 
 # Progress
 
-**19 / 20 days implemented.** Weeks 1–3 and Days 16–19 production code is in place; **463** unit tests pass. Day 20 tests are ready (`TODO()` stubs). Follow-on Android, DSA, and spoken-quiz materials are in the repo (see the end of this file).
+**20 / 20 days implemented.** Weeks 1–4 production code is in place; **478** unit tests pass. Follow-on Android, DSA, and spoken-quiz materials are in the repo (see the end of this file).
 
 | Day | Topic | Status | Exercises | Tests | Source |
 |---|---|---|---|---|---|
@@ -42,7 +42,7 @@ Recommended time: **60–90 minutes/day, 5 days/week**.
 | 17 | State Management | Implemented | 1 | 10 | `week4/StateManagementPractice.kt` |
 | 18 | Race Conditions and Search | Implemented | 1 | 10 | `week4/RaceConditionsPractice.kt` |
 | 19 | Offline-First Architecture | Implemented | 1 | 9 | `week4/OfflineFirstPractice.kt` |
-| 20 | Final Challenge: Task Manager | Tests ready | 1 | 15 | `week4/TaskManagerPractice.kt` |
+| 20 | Final Challenge: Task Manager | Implemented | 1 | 15 | `week4/TaskManagerPractice.kt` |
 
 Matching tests live under `src/test/kotlin/practice/` with the same week and file names.
 
@@ -397,7 +397,7 @@ Interview targets: Channel vs SharedFlow vs StateFlow, why Channel is a queue no
 
 # Week 4 — Senior Android Architecture
 
-**Status: in progress.** Days 16–19 implemented (6 exercises, 47 tests). Day 20 production bodies are `TODO()`. 62 tests. Do not modify the tests.
+**Status: implemented.** Days 16–20, 7 exercises, 62 tests passing. Do not modify the tests.
 
 ## Day 16 — Repository Pattern
 
@@ -478,7 +478,7 @@ Interview targets: database as source of truth, why refresh status is not the us
 
 ## Day 20 — Final Challenge: Task Manager
 
-**Status: tests ready.** Production bodies are `TODO()`.
+**Status: implemented.**
 
 Model:
 
@@ -491,14 +491,19 @@ data class Task(
 )
 ```
 
-`TaskManager` is yours to implement. The tests describe behaviour; you choose the stream types and defend them:
+`TaskManager` chooses the stream types from behaviour, not from a prescribed API:
 
-- The UI can always read current tasks.
-- Save success is one-shot — a late collector must not replay the snackbar.
+- The UI can always read current tasks (`StateFlow`).
+- Save success is one-shot — a late collector must not replay the snackbar (`SharedFlow`, `replay = 0`).
 - Local table is the source of truth; remote writes into it.
 - Search must not run on every keystroke, and an old response must not win.
 
-Behaviour covered by tests: load/add/complete, refresh, offline cache on refresh failure, one-shot Saved, no search-per-keystroke, stale search cannot win, blank query restores cache.
+Exercises:
+- [x] `TaskManager` — collect the local table into `StateFlow`; `load`/`refresh` write `fetchAll` via `replaceAll`; `add` upserts locally then `save`; `complete` marks the cache; search is debounce → `distinctUntilChanged` → `flatMapLatest`.
+
+Tests verify cached tasks before refresh, loading until the network returns, refresh success replacing the cache, refresh failure keeping cache, optimistic add, one-shot Saved / ShowError, no replay to a late collector, complete in cache, no search-per-keystroke, stale search cannot win, and a blank query restoring cache.
+
+Interview targets: StateFlow vs SharedFlow vs Channel for this screen, why local is the source of truth, why `flatMapLatest` beats a request-id flag, why cancellation is not a load/search error.
 
 ---
 
@@ -510,7 +515,7 @@ src/
 │   ├── week1/       # Days 1–5  language depth     — implemented
 │   ├── week2/       # Days 6–10 coroutines         — implemented
 │   ├── week3/       # Days 11–15 Flow              — implemented
-│   ├── week4/       # Days 16–20 architecture      — Days 16–19 implemented; 20 TODO()
+│   ├── week4/       # Days 16–20 architecture      — implemented
 │   ├── androidapp/  # Compose/ViewModel/Room stand-in (reuses Week 4)
 │   └── dsa/         # lean DSA for FAANG screens
 └── test/kotlin/practice/
@@ -553,7 +558,7 @@ Then **you** decide whether Flow, StateFlow, SharedFlow or Channel fits.
 
 # Completion Checklist
 
-Week 1–3 production code and tests are done. Days 16–19 implemented. Day 20 tests are ready (`TODO()` stubs). Remaining items are Day 20, spoken defence, plus the Android / system-design / DSA follow-ons.
+Week 1–4 production code and tests are done. Remaining items are spoken defence, plus the Android / system-design / DSA follow-ons.
 
 - [x] `let` vs `run` vs `apply` vs `also`
 - [x] Null-safety decisions
