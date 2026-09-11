@@ -1,6 +1,7 @@
 package practice.week4
 
-import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -10,9 +11,14 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Day 20 — Task Manager capstone.
@@ -66,6 +72,13 @@ interface TaskRemote {
     suspend fun fetchAll(): List<Task>
     suspend fun save(task: Task)
     suspend fun search(query: String): List<Task>
+}
+
+private sealed interface SearchEvent {
+    data object Idle : SearchEvent
+    data object Loading : SearchEvent
+    data class Success(val items: List<Task>) : SearchEvent
+    data class Failure(val message: String?) : SearchEvent
 }
 
 /**
@@ -166,6 +179,7 @@ class FakeTaskRemote(
  * Capstone controller. Wire [state], [events], load/refresh, add,
  * complete, and search. See file KDoc for the behaviour to defend.
  */
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class TaskManager(
     private val local: TaskLocalStore,
     private val remote: TaskRemote,
@@ -181,17 +195,53 @@ class TaskManager(
     private val _events = MutableSharedFlow<TaskEvent>()
     val events: SharedFlow<TaskEvent> = _events.asSharedFlow()
 
+    private val queries = MutableStateFlow("")
+
     init {
         scope.launch {
             local.observeTasks().collect { tasks ->
-                _state.update {
-                    it.copy(tasks = tasks)
+                _state.update { state ->
+                    if (state.query.isBlank()) state.copy(tasks = tasks) else state
                 }
             }
+        }
+        scope.launch {
+            queries
+                .debounce(debounceMillis.milliseconds)
+                .distinctUntilChanged()
+                .flatMapLatest { query ->
+                    flow {
+                        if (query.isBlank()) {
+                            emit(SearchEvent.Idle)
+                        } else {
+                            emit(SearchEvent.Loading)
+                            try {
+                                emit(SearchEvent.Success(remote.search(query)))
+                            } catch (cancelled: CancellationException) {
+                                throw cancelled
+                            } catch (error: Throwable) {
+                                emit(SearchEvent.Failure(error.message))
+                            }
+                        }
+                    }
+                }
+                .collect { event ->
+                    when (event) {
+                        SearchEvent.Idle -> _state.update { it.copy(loading = false, tasks = local.current()) }
+                        SearchEvent.Loading -> _state.update { it.copy(loading = true, error = null) }
+                        is SearchEvent.Success -> _state.update {
+                            it.copy(loading = false, tasks = event.items, error = null)
+                        }
+                        is SearchEvent.Failure -> _state.update {
+                            it.copy(loading = false, error = event.message)
+                        }
+                    }
+                }
         }
     }
 
     private var refreshJob: Job? = null
+    private var seacchJob: Job? = null
 
     fun load() {
         setLoading(true)
@@ -253,6 +303,7 @@ class TaskManager(
     }
 
     fun search(query: String) {
-        TODO()
+        _state.update { it.copy(query = query) }
+        queries.value = query
     }
 }
